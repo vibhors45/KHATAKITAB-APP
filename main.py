@@ -12,6 +12,7 @@ import hashlib, hmac, json, base64, os, enum
 
 # ─── APP ──────────────────────────────────────────────────────────────────────
 app = FastAPI(title="HisabKitab API", version="2.0.0")
+app.mount("/static", StaticFiles(directory="."), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
