@@ -469,10 +469,17 @@ def reminders(current=Depends(get_current_user), db: Session = Depends(get_db)):
             })
     return sorted(result, key=lambda x: -x["days_since_credit"])
 
-# ─── HEALTH ───────────────────────────────────────────────────────────────────
+# ─── FRONTEND & ASSETS ────────────────────────────────────────────────────────
 @app.get("/", include_in_schema=False)
 async def serve_frontend():
     return FileResponse("index.html")
+
+# ✅ NEW: Serve the logo directly from the main folder
+@app.get("/logo.png", include_in_schema=False)
+async def serve_logo():
+    return FileResponse("logo.png")
+
+# ─── HEALTH ───────────────────────────────────────────────────────────────────
 @app.get("/health", tags=["Health"])
 def health():
     return {
