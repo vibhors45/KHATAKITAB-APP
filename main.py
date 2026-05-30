@@ -70,7 +70,7 @@ def hash_password(pw: str) -> str:
 
 # ─── MODELS ───────────────────────────────────────────────────────────────────
 class User(Base):
-    __tablename__ = "users"
+    _tablename_ = "users"
     id        = Column(Integer, primary_key=True, index=True)
     name      = Column(String, nullable=False)
     email     = Column(String, unique=True, index=True, nullable=False)
@@ -79,7 +79,7 @@ class User(Base):
     phone     = Column(String, default="")   # ✅ NEW: owner WhatsApp number
 
 class Customer(Base):
-    __tablename__ = "customers"
+    _tablename_ = "customers"
     id           = Column(Integer, primary_key=True, index=True)
     user_id      = Column(Integer, ForeignKey("users.id"), nullable=False)
     name         = Column(String, nullable=False)
@@ -93,7 +93,7 @@ class TransactionType(str, enum.Enum):
     payment = "payment"
 
 class Transaction(Base):
-    __tablename__ = "transactions"
+    _tablename_ = "transactions"
     id          = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
     user_id     = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -104,7 +104,7 @@ class Transaction(Base):
     customer    = relationship("Customer", back_populates="transactions")
 
 class Product(Base):
-    __tablename__ = "products"
+    _tablename_ = "products"
     id        = Column(Integer, primary_key=True, index=True)
     user_id   = Column(Integer, ForeignKey("users.id"), nullable=False)
     name      = Column(String, nullable=False)
@@ -118,7 +118,7 @@ class SaleType(str, enum.Enum):
     credit = "credit"
 
 class Sale(Base):
-    __tablename__ = "sales"
+    _tablename_ = "sales"
     id          = Column(Integer, primary_key=True, index=True)
     user_id     = Column(Integer, ForeignKey("users.id"), nullable=False)
     product_id  = Column(Integer, ForeignKey("products.id"), nullable=False)
@@ -134,7 +134,7 @@ Base.metadata.create_all(bind=engine)
 # Add phone column to existing database if upgrading from old version
 try:
     with engine.connect() as conn:
-        conn.execute(__import__('sqlalchemy').text("ALTER TABLE users ADD COLUMN phone VARCHAR DEFAULT ''"))
+        conn.execute(_import_('sqlalchemy').text("ALTER TABLE users ADD COLUMN phone VARCHAR DEFAULT ''"))
         conn.commit()
 except Exception:
     pass  # Column already exists, no problem
@@ -469,10 +469,17 @@ def reminders(current=Depends(get_current_user), db: Session = Depends(get_db)):
             })
     return sorted(result, key=lambda x: -x["days_since_credit"])
 
-# ─── HEALTH ───────────────────────────────────────────────────────────────────
+# ─── FRONTEND & ASSETS ────────────────────────────────────────────────────────
 @app.get("/", include_in_schema=False)
 async def serve_frontend():
     return FileResponse("index.html")
+
+# ✅ NEW: Serve the logo directly from the main folder
+@app.get("/logo.png", include_in_schema=False)
+async def serve_logo():
+    return FileResponse("logo.png")
+
+# ─── HEALTH ───────────────────────────────────────────────────────────────────
 @app.get("/health", tags=["Health"])
 def health():
     return {
