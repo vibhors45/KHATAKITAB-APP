@@ -2,7 +2,7 @@ from fastapi.responses import FileResponse
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy import create_engine, Column, Integer, String, Float, Enum, Date, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, Enum, Date, ForeignKey, text
 from sqlalchemy.orm import sessionmaker, Session, relationship, declarative_base
 from pydantic import BaseModel
 from typing import Optional
@@ -24,17 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 📧 EMAIL CONFIG
-# ──────────────────────────────────────────────────────────────────────────────
-# STEP 1: Create a Gmail account e.g.  hisabkitab.app@gmail.com
-# STEP 2: Gmail → Settings → Security → 2-Step Verification → App Passwords
-#         Generate App Password for "Mail" → paste the 16-char code below
-# STEP 3: Replace the two values below (or set as environment variables)
-# ══════════════════════════════════════════════════════════════════════════════
-GMAIL_USER     = "khatakitabapp@gmail.com"   # ← replace
-GMAIL_APP_PASS = "niks hmjr qitl cxug"   # ← replace
-GMAIL_NAME     = "KhataKitab"
+# ── EMAIL CONFIG ───────────────────────────────────────────────────────────────
+GMAIL_USER     = os.getenv("GMAIL_USER",         "khatakitabapp@gmail.com")
+GMAIL_APP_PASS = os.getenv("GMAIL_APP_PASSWORD", "niks hmjr qitl cxug")
+GMAIL_NAME     = "HisabKitab"
 
 # ─── DATABASE ─────────────────────────────────────────────────────────────────
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./udhaar.db")
@@ -53,7 +46,7 @@ def get_db():
         db.close()
 
 # ─── JWT ──────────────────────────────────────────────────────────────────────
-SECRET_KEY = os.getenv("SECRET_KEY", "hisabkitab-super-secret-2025")
+SECRET_KEY = os.getenv("SECRET_KEY", "hisabkitab-super-secret-2025-vibhor")
 security   = HTTPBearer()
 
 def make_token(payload: dict) -> str:
@@ -101,7 +94,7 @@ class Customer(Base):
     name         = Column(String, nullable=False)
     phone        = Column(String, nullable=False)
     address      = Column(String, default="")
-    email        = Column(String, default="")        # ✅ customer email for receipts
+    email        = Column(String, default="")
     created_at   = Column(Date, default=date.today)
     transactions = relationship("Transaction", back_populates="customer")
 
@@ -145,173 +138,20 @@ class Sale(Base):
     type        = Column(Enum(SaleType), nullable=False)
     date        = Column(Date, default=date.today)
 
-# Create all tables
+# Create tables
 Base.metadata.create_all(bind=engine)
 
-# ── Auto-add new columns to existing databases (safe upgrade) ─────────────────
+# Safe column additions for existing databases
 def _add_col(table, col, col_type="VARCHAR DEFAULT ''"):
     try:
-        import sqlalchemy
         with engine.connect() as conn:
-            conn.execute(sqlalchemy.text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}"))
+            conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}"))
             conn.commit()
     except Exception:
-        pass  # column already exists
+        pass
 
 _add_col("users",     "phone")
 _add_col("customers", "email")
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 📧 EMAIL HELPERS
-# ══════════════════════════════════════════════════════════════════════════════
-def _send_email(to: str, subject: str, html: str, pdf_bytes: bytes = None, pdf_name: str = None):
-    """Fire-and-forget email in a background thread."""
-    def _worker():
-        try:
-            msg = MIMEMultipart("mixed")
-            msg["Subject"] = subject
-            msg["From"]    = f"{GMAIL_NAME} <{GMAIL_USER}>"
-            msg["To"]      = to
-            msg.attach(MIMEText(html, "html", "utf-8"))
-
-            if pdf_bytes and pdf_name:
-                part = MIMEBase("application", "octet-stream")
-                part.set_payload(pdf_bytes)
-                encoders.encode_base64(part)
-                part.add_header("Content-Disposition", f'attachment; filename="{pdf_name}"')
-                msg.attach(part)
-
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-                s.login(GMAIL_USER, GMAIL_APP_PASS)
-                s.sendmail(GMAIL_USER, to, msg.as_string())
-            print(f"✅ Email sent → {to}")
-        except Exception as e:
-            print(f"❌ Email failed → {to}: {e}")
-
-    threading.Thread(target=_worker, daemon=True).start()
-
-
-def _email_welcome(name: str, shop: str, to: str):
-    html = f"""
-    <div style="font-family:'Segoe UI',sans-serif;max-width:540px;margin:auto;background:#0d0f14;
-                color:#eceef5;border-radius:16px;overflow:hidden;border:1px solid #252835">
-      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:36px;text-align:center">
-        <h1 style="margin:0;font-size:28px;letter-spacing:-1px">📒 HisabKitab</h1>
-        <p style="margin:8px 0 0;opacity:.8;font-size:14px">Smart Dukaan Management</p>
-      </div>
-      <div style="padding:32px">
-        <h2 style="color:#6366f1;margin-top:0">Namaste {name} ji! 🙏</h2>
-        <p style="line-height:1.7">Aapka <strong>{shop}</strong> ab HisabKitab par registered hai.<br>
-        Ab aap apni dukaan ka poora hisaab digitally manage kar sakte ho!</p>
-        <div style="background:#13161e;border-radius:10px;padding:18px;margin:20px 0">
-          <p style="margin:0 0 10px;font-weight:600">🚀 Aap kar sakte ho:</p>
-          <p style="margin:4px 0;color:#9ca3af">📒 Customer ka udhaar track</p>
-          <p style="margin:4px 0;color:#9ca3af">📦 Inventory management</p>
-          <p style="margin:4px 0;color:#9ca3af">📊 Sales analytics & charts</p>
-          <p style="margin:4px 0;color:#9ca3af">🤖 AI Dukaan Assistant</p>
-          <p style="margin:4px 0;color:#9ca3af">💬 WhatsApp payment reminders</p>
-          <p style="margin:4px 0;color:#9ca3af">📧 Email bill receipts</p>
-        </div>
-        <p style="color:#6b7280;font-size:13px">Registration time: {datetime.now().strftime('%d %b %Y, %I:%M %p')}</p>
-      </div>
-      <div style="padding:16px 32px;background:#13161e;border-top:1px solid #252835;
-                  text-align:center;color:#6b7280;font-size:12px">
-        HisabKitab — Aapki dukaan ka digital hisaab · Do not reply to this email
-      </div>
-    </div>"""
-    _send_email(to, f"🎉 HisabKitab par Welcome, {name} ji!", html)
-
-
-def _email_password_reset(name: str, to: str):
-    html = f"""
-    <div style="font-family:'Segoe UI',sans-serif;max-width:540px;margin:auto;background:#0d0f14;
-                color:#eceef5;border-radius:16px;overflow:hidden;border:1px solid #252835">
-      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:36px;text-align:center">
-        <h1 style="margin:0;font-size:28px">🔐 HisabKitab</h1>
-      </div>
-      <div style="padding:32px">
-        <h2 style="margin-top:0">Password Reset Ho Gaya ✅</h2>
-        <p>Namaste <strong>{name}</strong> ji,</p>
-        <p style="line-height:1.7">Aapka HisabKitab account ka password successfully reset ho gaya hai.</p>
-        <div style="background:#ef444420;border:1px solid #ef444440;border-radius:10px;padding:16px;margin:20px 0">
-          <p style="margin:0;color:#ef4444;font-weight:600">⚠️ Agar aapne yeh nahi kiya?</p>
-          <p style="margin:6px 0 0;color:#9ca3af;font-size:14px">Turant apna password dobara change karein aur support se contact karein.</p>
-        </div>
-        <p style="color:#6b7280;font-size:13px">Reset time: {datetime.now().strftime('%d %b %Y, %I:%M %p')}</p>
-      </div>
-      <div style="padding:16px 32px;background:#13161e;border-top:1px solid #252835;
-                  text-align:center;color:#6b7280;font-size:12px">
-        HisabKitab — Do not reply to this email
-      </div>
-    </div>"""
-    _send_email(to, "HisabKitab — Password Reset Confirmation 🔐", html)
-
-
-def _email_receipt(shop: str, owner: str, cust_name: str, cust_email: str,
-                   txns: list, balance: float, pdf_bytes: bytes = None):
-    rows_html = "".join([
-        f"""<tr>
-          <td style="padding:10px 12px;border-bottom:1px solid #252835">{t['date']}</td>
-          <td style="padding:10px 12px;border-bottom:1px solid #252835">
-            <span style="background:{'rgba(251,146,60,.15)' if t['type']=='credit' else 'rgba(34,197,94,.15)'};
-                         color:{'#fb923c' if t['type']=='credit' else '#22c55e'};
-                         border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700">
-              {t['type'].upper()}
-            </span>
-          </td>
-          <td style="padding:10px 12px;border-bottom:1px solid #252835;font-weight:700">₹{t['amount']:,.0f}</td>
-          <td style="padding:10px 12px;border-bottom:1px solid #252835;color:#9ca3af">{t.get('note','—')}</td>
-        </tr>"""
-        for t in txns
-    ])
-    bal_color  = "#ef4444" if balance > 0 else "#22c55e"
-    bal_label  = "💰 Baaki Balance" if balance > 0 else "✅ Balance Clear"
-    bal_msg    = "<p style='color:#ef4444'>Kripya jald settle karein. Dhanyavaad! 🙏</p>" if balance > 0 \
-                 else "<p style='color:#22c55e'>Shukriya! Aapka khata bilkul clear hai. 🎉</p>"
-
-    html = f"""
-    <div style="font-family:'Segoe UI',sans-serif;max-width:620px;margin:auto;background:#0d0f14;
-                color:#eceef5;border-radius:16px;overflow:hidden;border:1px solid #252835">
-      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:32px;text-align:center">
-        <h1 style="margin:0;font-size:24px">📒 {shop}</h1>
-        <p style="margin:6px 0 0;opacity:.85;font-size:13px">Khata Bill Receipt</p>
-      </div>
-      <div style="padding:28px">
-        <p>Namaste <strong>{cust_name}</strong> ji 🙏</p>
-        <p style="color:#9ca3af;font-size:14px">Neeche aapka <strong style="color:#eceef5">{shop}</strong> ka complete khata statement hai:</p>
-        <table style="width:100%;border-collapse:collapse;background:#13161e;border-radius:10px;
-                      overflow:hidden;margin:16px 0;font-size:14px">
-          <thead>
-            <tr style="background:#191c26">
-              <th style="padding:12px;text-align:left;color:#6b7280;font-size:11px;text-transform:uppercase">Date</th>
-              <th style="padding:12px;text-align:left;color:#6b7280;font-size:11px;text-transform:uppercase">Type</th>
-              <th style="padding:12px;text-align:left;color:#6b7280;font-size:11px;text-transform:uppercase">Amount</th>
-              <th style="padding:12px;text-align:left;color:#6b7280;font-size:11px;text-transform:uppercase">Note</th>
-            </tr>
-          </thead>
-          <tbody>{rows_html}</tbody>
-        </table>
-        <div style="background:#13161e;border:2px solid {bal_color};border-radius:10px;
-                    padding:16px 20px;display:flex;justify-content:space-between;align-items:center;
-                    margin-bottom:16px">
-          <span style="font-weight:600;font-size:15px">{bal_label}</span>
-          <span style="font-size:26px;font-weight:800;color:{bal_color}">₹{abs(balance):,.0f}</span>
-        </div>
-        {bal_msg}
-        <p style="color:#6b7280;font-size:13px;margin-top:20px">
-          Koi sawaal? <strong>{owner}</strong> se contact karein.
-          {"<br>📎 PDF receipt is attached with this email." if pdf_bytes else ""}
-        </p>
-      </div>
-      <div style="padding:16px 28px;background:#13161e;border-top:1px solid #252835;
-                  text-align:center;color:#6b7280;font-size:12px">
-        Sent via HisabKitab · {date.today().strftime('%d %b %Y')} · Do not reply
-      </div>
-    </div>"""
-
-    pdf_name = f"Khata_{cust_name.replace(' ','_')}_{date.today()}.pdf" if pdf_bytes else None
-    _send_email(cust_email, f"{shop} — Aapka Khata Statement 📒", html, pdf_bytes, pdf_name)
-
 
 # ─── DATE HELPER ──────────────────────────────────────────────────────────────
 def parse_date(raw: Optional[str]) -> date:
@@ -323,6 +163,172 @@ def parse_date(raw: Optional[str]) -> date:
         except ValueError:
             continue
     return date.today()
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EMAIL HELPERS
+# ══════════════════════════════════════════════════════════════════════════════
+def _send_email(to: str, subject: str, html: str,
+                pdf_bytes: bytes = None, pdf_name: str = None):
+    def _worker():
+        try:
+            msg = MIMEMultipart("mixed")
+            msg["Subject"] = subject
+            msg["From"]    = f"{GMAIL_NAME} <{GMAIL_USER}>"
+            msg["To"]      = to
+            msg.attach(MIMEText(html, "html", "utf-8"))
+            if pdf_bytes and pdf_name:
+                part = MIMEBase("application", "octet-stream")
+                part.set_payload(pdf_bytes)
+                encoders.encode_base64(part)
+                part.add_header("Content-Disposition", f'attachment; filename="{pdf_name}"')
+                msg.attach(part)
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+                s.login(GMAIL_USER, GMAIL_APP_PASS)
+                s.sendmail(GMAIL_USER, to, msg.as_string())
+            print(f"✅ Email sent → {to}")
+        except Exception as e:
+            print(f"❌ Email error → {to}: {e}")
+    threading.Thread(target=_worker, daemon=True).start()
+
+
+def _email_welcome(name: str, shop: str, to: str):
+    html = f"""
+    <div style="font-family:'Segoe UI',sans-serif;max-width:540px;margin:auto;
+                background:#0d0f14;color:#eceef5;border-radius:16px;overflow:hidden;
+                border:1px solid #252835">
+      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:36px;text-align:center">
+        <h1 style="margin:0;font-size:26px">📒 HisabKitab</h1>
+        <p style="margin:6px 0 0;opacity:.8;font-size:13px">Smart Dukaan Management</p>
+      </div>
+      <div style="padding:32px">
+        <h2 style="color:#6366f1;margin-top:0">Namaste {name} ji! 🙏</h2>
+        <p>Aapka <strong>{shop}</strong> ab HisabKitab par registered hai.</p>
+        <div style="background:#13161e;border-radius:10px;padding:18px;margin:20px 0;border:1px solid #252835">
+          <p style="margin:0 0 8px;font-weight:600">🚀 Aap kar sakte ho:</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">📒 Customer ka udhaar track karo</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">📦 Inventory manage karo</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">📊 Sales analytics dekho</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">🤖 AI Dukaan Assistant se poochho</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">💬 WhatsApp reminders bhejo</p>
+          <p style="margin:3px 0;color:#9ca3af;font-size:14px">📧 Email bill receipts bhejo</p>
+        </div>
+        <p style="color:#6b7280;font-size:12px">
+          Registered: {datetime.now().strftime('%d %b %Y, %I:%M %p')}
+        </p>
+      </div>
+      <div style="padding:14px 32px;background:#13161e;border-top:1px solid #252835;
+                  text-align:center;color:#6b7280;font-size:11px">
+        HisabKitab — Aapki dukaan ka digital hisaab
+      </div>
+    </div>"""
+    _send_email(to, f"🎉 HisabKitab par Welcome, {name} ji!", html)
+
+
+def _email_password_reset(name: str, to: str):
+    html = f"""
+    <div style="font-family:'Segoe UI',sans-serif;max-width:540px;margin:auto;
+                background:#0d0f14;color:#eceef5;border-radius:16px;overflow:hidden;
+                border:1px solid #252835">
+      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:36px;text-align:center">
+        <h1 style="margin:0;font-size:26px">🔐 HisabKitab</h1>
+      </div>
+      <div style="padding:32px">
+        <h2 style="margin-top:0">Password Reset Ho Gaya ✅</h2>
+        <p>Namaste <strong>{name}</strong> ji,</p>
+        <p>Aapka HisabKitab password successfully reset ho gaya hai.</p>
+        <div style="background:#ef444415;border:1px solid #ef444440;border-radius:10px;
+                    padding:14px;margin:16px 0">
+          <p style="margin:0;color:#ef4444;font-weight:600;font-size:14px">
+            ⚠️ Agar aapne nahi kiya? Turant password change karein.
+          </p>
+        </div>
+        <p style="color:#6b7280;font-size:12px">
+          Time: {datetime.now().strftime('%d %b %Y, %I:%M %p')}
+        </p>
+      </div>
+      <div style="padding:14px 32px;background:#13161e;border-top:1px solid #252835;
+                  text-align:center;color:#6b7280;font-size:11px">
+        HisabKitab — Do not reply to this email
+      </div>
+    </div>"""
+    _send_email(to, "HisabKitab — Password Reset Confirmation 🔐", html)
+
+
+def _email_receipt(shop: str, owner: str, cust_name: str, cust_email: str,
+                   txns: list, balance: float, pdf_bytes: bytes = None):
+    rows = "".join([
+        f"""<tr>
+          <td style="padding:9px 12px;border-bottom:1px solid #252835;font-size:13px">{t['date']}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid #252835">
+            <span style="background:{'rgba(251,146,60,.15)' if t['type']=='credit' else 'rgba(34,197,94,.15)'};
+                         color:{'#fb923c' if t['type']=='credit' else '#22c55e'};
+                         border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">
+              {str(t['type']).upper()}
+            </span>
+          </td>
+          <td style="padding:9px 12px;border-bottom:1px solid #252835;font-weight:700;font-size:13px">
+            ₹{t['amount']:,.0f}
+          </td>
+          <td style="padding:9px 12px;border-bottom:1px solid #252835;color:#9ca3af;font-size:12px">
+            {t.get('note') or '—'}
+          </td>
+        </tr>"""
+        for t in txns
+    ])
+    bc  = "#ef4444" if balance > 0 else "#22c55e"
+    lbl = "💰 Baaki Balance" if balance > 0 else "✅ Balance Clear"
+    msg = "<p style='color:#ef4444;font-size:14px'>Kripya jald settle karein. Dhanyavaad! 🙏</p>" \
+          if balance > 0 else \
+          "<p style='color:#22c55e;font-size:14px'>Shukriya! Aapka khata bilkul clear hai 🎉</p>"
+    html = f"""
+    <div style="font-family:'Segoe UI',sans-serif;max-width:620px;margin:auto;
+                background:#0d0f14;color:#eceef5;border-radius:16px;overflow:hidden;
+                border:1px solid #252835">
+      <div style="background:linear-gradient(135deg,#6366f1,#7c3aed);padding:30px;text-align:center">
+        <h1 style="margin:0;font-size:22px">📒 {shop}</h1>
+        <p style="margin:5px 0 0;opacity:.85;font-size:12px">Khata Bill Receipt</p>
+      </div>
+      <div style="padding:26px">
+        <p>Namaste <strong>{cust_name}</strong> ji 🙏</p>
+        <p style="color:#9ca3af;font-size:13px">
+          Aapka <strong style="color:#eceef5">{shop}</strong> ka khata statement:
+        </p>
+        <table style="width:100%;border-collapse:collapse;background:#13161e;
+                      border-radius:10px;overflow:hidden;margin:14px 0">
+          <thead>
+            <tr style="background:#191c26">
+              <th style="padding:11px 12px;text-align:left;color:#6b7280;font-size:10px;
+                         text-transform:uppercase">Date</th>
+              <th style="padding:11px 12px;text-align:left;color:#6b7280;font-size:10px;
+                         text-transform:uppercase">Type</th>
+              <th style="padding:11px 12px;text-align:left;color:#6b7280;font-size:10px;
+                         text-transform:uppercase">Amount</th>
+              <th style="padding:11px 12px;text-align:left;color:#6b7280;font-size:10px;
+                         text-transform:uppercase">Note</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+        <div style="background:#13161e;border:2px solid {bc};border-radius:10px;
+                    padding:14px 18px;display:flex;justify-content:space-between;
+                    align-items:center;margin-bottom:14px">
+          <span style="font-weight:600">{lbl}</span>
+          <span style="font-size:24px;font-weight:800;color:{bc}">₹{abs(balance):,.0f}</span>
+        </div>
+        {msg}
+        <p style="color:#6b7280;font-size:12px;margin-top:18px">
+          — {owner}, {shop}<br>
+          Sent via HisabKitab · {date.today().strftime('%d %b %Y')}
+          {"<br>📎 PDF receipt attached." if pdf_bytes else ""}
+        </p>
+      </div>
+      <div style="padding:12px 26px;background:#13161e;border-top:1px solid #252835;
+                  text-align:center;color:#6b7280;font-size:11px">
+        HisabKitab — Dukaan ka digital hisaab · Do not reply
+      </div>
+    </div>"""
+    pdf_name = f"Khata_{cust_name.replace(' ','_')}_{date.today()}.pdf" if pdf_bytes else None
+    _send_email(cust_email, f"{shop} — Aapka Khata Statement 📒", html, pdf_bytes, pdf_name)
 
 
 # ─── SCHEMAS ──────────────────────────────────────────────────────────────────
@@ -348,7 +354,7 @@ class CustomerIn(BaseModel):
     name: str
     phone: str
     address: str = ""
-    email: str = ""          # ✅ customer email for receipts
+    email: str = ""
 
 class TransactionIn(BaseModel):
     customer_id: int
@@ -376,7 +382,7 @@ class SaleIn(BaseModel):
 
 class SendReceiptIn(BaseModel):
     customer_id: int
-    pdf_base64: Optional[str] = None   # base64-encoded PDF from frontend
+    pdf_base64: Optional[str] = None
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -390,7 +396,6 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
                 password=hash_password(data.password),
                 shop_name=data.shop_name, phone=data.phone)
     db.add(user); db.commit(); db.refresh(user)
-    # ✅ Send welcome email
     _email_welcome(data.name, data.shop_name, data.email)
     return {"message": "Registered successfully", "user_id": user.id}
 
@@ -407,8 +412,12 @@ def login(data: LoginIn, db: Session = Depends(get_db)):
     token = make_token({"sub": user.id, "email": user.email, "exp": exp})
     return {
         "token": token,
-        "user": {"id": user.id, "name": user.name,
-                 "shop_name": user.shop_name, "phone": user.phone or ""}
+        "user": {
+            "id":        user.id,
+            "name":      user.name,
+            "shop_name": user.shop_name,
+            "phone":     user.phone or ""
+        }
     }
 
 
@@ -436,7 +445,6 @@ def reset_password(data: ResetPasswordIn, db: Session = Depends(get_db)):
         raise HTTPException(404, "No account found with this email")
     user.password = hash_password(data.new_password)
     db.commit()
-    # ✅ Send reset confirmation email
     _email_password_reset(user.name, user.email)
     return {"message": "Password reset successfully"}
 
@@ -470,10 +478,13 @@ def add_customer(data: CustomerIn, current=Depends(get_current_user), db: Sessio
 
 @app.get("/customers/{cid}", tags=["Customers"])
 def get_customer(cid: int, current=Depends(get_current_user), db: Session = Depends(get_db)):
-    c = db.query(Customer).filter(Customer.id == cid, Customer.user_id == current["sub"]).first()
+    c = db.query(Customer).filter(Customer.id == cid,
+                                   Customer.user_id == current["sub"]).first()
     if not c:
         raise HTTPException(404, "Customer not found")
-    txns    = db.query(Transaction).filter(Transaction.customer_id == cid).order_by(Transaction.date).all()
+    txns    = db.query(Transaction).filter(
+        Transaction.customer_id == cid
+    ).order_by(Transaction.date).all()
     balance = 0; ledger = []
     for t in txns:
         balance += t.amount if t.type == "credit" else -t.amount
@@ -485,29 +496,28 @@ def get_customer(cid: int, current=Depends(get_current_user), db: Session = Depe
             "balance": round(balance, 2), "transactions": ledger}
 
 
-# ✅ NEW: Send bill receipt to customer via email (+ optional PDF attachment)
 @app.post("/customers/{cid}/send-receipt", tags=["Customers"])
 def send_receipt(cid: int, data: SendReceiptIn,
                  current=Depends(get_current_user), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == current["sub"]).first()
-    c    = db.query(Customer).filter(Customer.id == cid, Customer.user_id == current["sub"]).first()
+    c    = db.query(Customer).filter(Customer.id == cid,
+                                      Customer.user_id == current["sub"]).first()
     if not c:
         raise HTTPException(404, "Customer not found")
     if not c.email:
-        raise HTTPException(400, "Is customer ka email nahi hai. Pehle customer ka email add karein.")
-
-    txns    = db.query(Transaction).filter(Transaction.customer_id == cid).order_by(Transaction.date).all()
-    balance = sum(t.amount if t.type == "credit" else -t.amount for t in txns)
+        raise HTTPException(400, "Customer ka email nahi hai. Pehle customer profile mein email add karein.")
+    txns    = db.query(Transaction).filter(
+        Transaction.customer_id == cid
+    ).order_by(Transaction.date).all()
+    balance  = sum(t.amount if t.type == "credit" else -t.amount for t in txns)
     txn_list = [{"date": str(t.date), "type": t.type,
                  "amount": t.amount, "note": t.note} for t in txns]
-
     pdf_bytes = None
     if data.pdf_base64:
         try:
             pdf_bytes = base64.b64decode(data.pdf_base64)
         except Exception:
             pass
-
     _email_receipt(user.shop_name, user.name, c.name, c.email,
                    txn_list, round(balance, 2), pdf_bytes)
     return {"message": f"✅ Receipt {c.name} ko email kar diya! ({c.email})"}
@@ -517,19 +527,17 @@ def send_receipt(cid: int, data: SendReceiptIn,
 # TRANSACTION ROUTES
 # ══════════════════════════════════════════════════════════════════════════════
 @app.post("/transactions", tags=["Udhaar"])
-def add_transaction(data: TransactionIn, current=Depends(get_current_user), db: Session = Depends(get_db)):
-    c = db.query(Customer).filter(
-        Customer.id == data.customer_id, Customer.user_id == current["sub"]
-    ).first()
+def add_transaction(data: TransactionIn,
+                    current=Depends(get_current_user), db: Session = Depends(get_db)):
+    c = db.query(Customer).filter(Customer.id == data.customer_id,
+                                   Customer.user_id == current["sub"]).first()
     if not c:
         raise HTTPException(404, "Customer not found")
-
     if data.type == "payment":
         txns    = db.query(Transaction).filter(Transaction.customer_id == data.customer_id).all()
         balance = sum(t.amount if t.type == "credit" else -t.amount for t in txns)
         if data.amount > balance:
             raise HTTPException(400, f"Payment ₹{data.amount} exceeds balance ₹{round(balance,2)}")
-
     t = Transaction(user_id=current["sub"], customer_id=data.customer_id,
                     amount=data.amount, type=data.type,
                     note=data.note, date=parse_date(data.date))
@@ -546,12 +554,14 @@ def list_products(current=Depends(get_current_user), db: Session = Depends(get_d
     products = db.query(Product).filter(Product.user_id == current["sub"]).all()
     return [{"id": p.id, "name": p.name, "price": p.price,
              "quantity": p.quantity, "unit": p.unit, "threshold": p.threshold,
-             "status": "out" if p.quantity == 0 else ("low" if p.quantity <= p.threshold else "ok")}
+             "status": "out" if p.quantity == 0 else
+                       ("low" if p.quantity <= p.threshold else "ok")}
             for p in products]
 
 
 @app.post("/products", tags=["Inventory"])
-def add_product(data: ProductIn, current=Depends(get_current_user), db: Session = Depends(get_db)):
+def add_product(data: ProductIn,
+                current=Depends(get_current_user), db: Session = Depends(get_db)):
     p = Product(user_id=current["sub"], name=data.name, price=data.price,
                 quantity=data.quantity, unit=data.unit, threshold=data.threshold)
     db.add(p); db.commit(); db.refresh(p)
@@ -560,8 +570,10 @@ def add_product(data: ProductIn, current=Depends(get_current_user), db: Session 
 
 
 @app.patch("/products/{pid}/restock", tags=["Inventory"])
-def restock(pid: int, data: RestockIn, current=Depends(get_current_user), db: Session = Depends(get_db)):
-    p = db.query(Product).filter(Product.id == pid, Product.user_id == current["sub"]).first()
+def restock(pid: int, data: RestockIn,
+            current=Depends(get_current_user), db: Session = Depends(get_db)):
+    p = db.query(Product).filter(Product.id == pid,
+                                  Product.user_id == current["sub"]).first()
     if not p: raise HTTPException(404, "Product not found")
     if data.quantity <= 0: raise HTTPException(400, "Quantity must be positive")
     p.quantity += data.quantity
@@ -574,14 +586,17 @@ def restock(pid: int, data: RestockIn, current=Depends(get_current_user), db: Se
 # ══════════════════════════════════════════════════════════════════════════════
 @app.get("/sales", tags=["Sales"])
 def list_sales(current=Depends(get_current_user), db: Session = Depends(get_db)):
-    sales = db.query(Sale).filter(Sale.user_id == current["sub"]).order_by(Sale.date.desc()).all()
+    sales = db.query(Sale).filter(
+        Sale.user_id == current["sub"]
+    ).order_by(Sale.date.desc()).all()
     return [{"id": s.id, "product_id": s.product_id, "customer_id": s.customer_id,
-             "quantity": s.quantity, "amount": s.amount, "type": s.type, "date": str(s.date)}
-            for s in sales]
+             "quantity": s.quantity, "amount": s.amount,
+             "type": s.type, "date": str(s.date)} for s in sales]
 
 
 @app.post("/sales", tags=["Sales"])
-def record_sale(data: SaleIn, current=Depends(get_current_user), db: Session = Depends(get_db)):
+def record_sale(data: SaleIn,
+                current=Depends(get_current_user), db: Session = Depends(get_db)):
     p = db.query(Product).filter(Product.id == data.product_id,
                                   Product.user_id == current["sub"]).first()
     if not p: raise HTTPException(404, "Product not found")
@@ -589,7 +604,6 @@ def record_sale(data: SaleIn, current=Depends(get_current_user), db: Session = D
         raise HTTPException(400, f"Insufficient stock. Available: {p.quantity} {p.unit}")
     if data.type == "credit" and not data.customer_id:
         raise HTTPException(400, "Customer required for credit sale")
-
     amount    = p.price * data.quantity
     sale_date = parse_date(data.date)
     sale = Sale(user_id=current["sub"], product_id=data.product_id,
@@ -597,13 +611,11 @@ def record_sale(data: SaleIn, current=Depends(get_current_user), db: Session = D
                 customer_id=data.customer_id, amount=amount, date=sale_date)
     db.add(sale)
     p.quantity -= data.quantity
-
     if data.type == "credit":
         txn = Transaction(user_id=current["sub"], customer_id=data.customer_id,
                           amount=amount, type="credit",
                           note=f"Sale: {p.name} x{data.quantity}", date=sale_date)
         db.add(txn)
-
     db.commit(); db.refresh(sale)
     return {"id": sale.id, "amount": amount,
             "product_name": p.name, "remaining_stock": p.quantity}
@@ -624,9 +636,9 @@ def dashboard(current=Depends(get_current_user), db: Session = Depends(get_db)):
     total_credit    = sum(t.amount for t in txns if t.type == "credit")
     total_collected = sum(t.amount for t in txns if t.type == "payment")
     today_sales     = sum(s.amount for s in sales if s.date == today_str)
-    low_stock       = [{"id": p.id, "name": p.name, "quantity": p.quantity, "unit": p.unit}
+    low_stock       = [{"id": p.id, "name": p.name,
+                        "quantity": p.quantity, "unit": p.unit}
                        for p in products if p.quantity <= p.threshold]
-
     overdue = []
     for c in customers:
         ctxns   = [t for t in txns if t.customer_id == c.id]
@@ -637,14 +649,13 @@ def dashboard(current=Depends(get_current_user), db: Session = Depends(get_db)):
             if days >= 10:
                 overdue.append({"id": c.id, "name": c.name,
                                 "balance": round(balance, 2), "days_overdue": days})
-
     weekly = []
     for i in range(6, -1, -1):
         day  = date.today() - timedelta(days=i)
         cash = sum(s.amount for s in sales if s.date == day and s.type == "cash")
         cred = sum(s.amount for s in sales if s.date == day and s.type == "credit")
-        weekly.append({"date": str(day), "day": day.strftime("%a"), "cash": cash, "credit": cred})
-
+        weekly.append({"date": str(day), "day": day.strftime("%a"),
+                       "cash": cash, "credit": cred})
     return {
         "total_credit":    round(total_credit, 2),
         "total_collected": round(total_collected, 2),
@@ -674,8 +685,8 @@ def reminders(current=Depends(get_current_user), db: Session = Depends(get_db)):
             last_credit = max((t.date for t in ctxns if t.type == "credit"), default=None)
             days = (date.today() - last_credit).days if last_credit else 0
             result.append({
-                "id": c.id, "name": c.name, "phone": c.phone,
-                "email": c.email or "",
+                "id": c.id, "name": c.name,
+                "phone": c.phone, "email": c.email or "",
                 "balance": round(balance, 2),
                 "days_since_credit": days,
                 "last_credit_date": str(last_credit) if last_credit else None,
@@ -684,9 +695,7 @@ def reminders(current=Depends(get_current_user), db: Session = Depends(get_db)):
     return sorted(result, key=lambda x: -x["days_since_credit"])
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# FRONTEND SERVING
-# ══════════════════════════════════════════════════════════════════════════════
+# ── Frontend serving ──────────────────────────────────────────────────────────
 @app.get("/", include_in_schema=False)
 async def serve_frontend():
     return FileResponse("index.html")
@@ -695,14 +704,7 @@ async def serve_frontend():
 async def serve_logo():
     return FileResponse("logo.png")
 
-# ─── HEALTH ───────────────────────────────────────────────────────────────────
 @app.get("/health", tags=["Health"])
 def health():
-    email_ok = GMAIL_USER != "YOUR_GMAIL@gmail.com"
-    return {
-        "status":           "ok",
-        "message":          "HisabKitab API v3 is running",
-        "email_configured": email_ok,
-        "email_account":    GMAIL_USER if email_ok else "⚠️ Not configured yet"
-    }
-    
+    return {"status": "ok", "message": "HisabKitab API v3",
+            "email": GMAIL_USER}
