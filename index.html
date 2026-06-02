@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="theme-color" content="#0d0f14"/>
-  <title>HisabKitab — Dukaan Management</title>
+  <title>KhataKitab — Dukaan Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -34,14 +34,8 @@
     .btn-sm { padding: .4rem .85rem !important; font-size: .8rem !important; }
     .btn-xs { padding: .25rem .6rem !important; font-size: .75rem !important; }
 
-    /* ══════════════════════════════════════
-       LAYOUT — Desktop default
-    ══════════════════════════════════════ */
     #app { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 
-    /* ══════════════════════════════════════
-       AUTH
-    ══════════════════════════════════════ */
     #auth-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 500; overflow-y: auto; padding: 1rem; }
     .auth-box { background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem; width: 100%; max-width: 420px; padding: 2.5rem 2rem; }
     .auth-logo { display: flex; align-items: center; gap: .75rem; margin-bottom: 2rem; }
@@ -54,18 +48,8 @@
     .forgot-panel { display: none; }
     .back-btn { display: flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; background: none; margin-bottom: 1.25rem; }
 
-    /* ══════════════════════════════════════
-       SIDEBAR — Desktop & Tablet landscape
-    ══════════════════════════════════════ */
-    #sidebar {
-      width: var(--sidebar-w); background: var(--bg2);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; flex-shrink: 0;
-      transition: transform .3s ease, width .3s ease;
-      z-index: 300;
-    }
+    #sidebar { width: var(--sidebar-w); background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; transition: transform .3s ease, width .3s ease; z-index: 300; }
     .sidebar-logo { padding: .5rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    /* Hamburger button — hidden on desktop */
     #sidebar-close-btn { display: none; background: transparent; color: var(--muted); font-size: 1.4rem; padding: 4px 8px; border-radius: .4rem; }
     #nav { flex: 1; padding: 1rem .75rem; overflow-y: auto; }
     .nav-item { width: 100%; display: flex; align-items: center; gap: .7rem; padding: .7rem .85rem; border-radius: .75rem; background: transparent; color: var(--muted); font-weight: 500; font-size: .88rem; margin-bottom: .2rem; text-align: left; }
@@ -76,13 +60,8 @@
     .lang-toggle { display: flex; gap: .3rem; padding: .5rem .75rem; border-bottom: 1px solid var(--border); }
     .lang-btn { flex: 1; padding: .3rem; border-radius: .45rem; background: transparent; color: var(--muted); font-size: .72rem; font-weight: 600; transition: all .15s; }
     .lang-btn.active { background: var(--accent); color: #fff; }
-
-    /* Overlay behind sidebar on mobile */
     #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 299; backdrop-filter: blur(2px); }
 
-    /* ══════════════════════════════════════
-       MAIN CONTENT
-    ══════════════════════════════════════ */
     #main { flex: 1; overflow-y: auto; padding: 2rem 2.25rem; background: var(--bg); -webkit-overflow-scrolling: touch; }
     .page { display: none; } .page.active { display: block; }
     .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem; }
@@ -120,16 +99,7 @@
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(10,10,20,.8); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: flex-end; justify-content: center; padding: 0; }
     .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 1.25rem 1.25rem 0 0;
-      width: 100%; max-width: 100%;
-      padding: 1.5rem 1.25rem 2rem;
-      box-shadow: 0 -8px 48px rgba(0,0,0,.5);
-      max-height: 92vh; overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    /* drag handle */
+    .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 1.25rem 1.25rem 0 0; width: 100%; max-width: 100%; padding: 1.5rem 1.25rem 2rem; box-shadow: 0 -8px 48px rgba(0,0,0,.5); max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .modal-box::before { content: ''; display: block; width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 1.25rem; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
     .modal-header h3 { font-size: 1.05rem; font-weight: 700; }
@@ -190,76 +160,33 @@
     .inline-restock { display: flex; gap: .4rem; align-items: center; }
     .inline-restock input { width: 65px; padding: .35rem .5rem; }
 
-    /* ══════════════════════════════════════
-       BOTTOM NAV — Mobile only
-    ══════════════════════════════════════ */
-    #bottom-nav {
-      display: none;
-      position: fixed; bottom: 0; left: 0; right: 0;
-      height: var(--bottom-nav-h);
-      background: var(--bg2); border-top: 1px solid var(--border);
-      z-index: 200;
-      padding: 0 .5rem;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
+    /* BOTTOM NAV */
+    #bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--bg2); border-top: 1px solid var(--border); z-index: 200; padding: 0 .5rem; padding-bottom: env(safe-area-inset-bottom); }
     #bottom-nav nav { display: flex; height: 100%; align-items: center; }
     .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: .4rem .25rem; border-radius: .65rem; background: transparent; color: var(--muted); font-size: .62rem; font-weight: 600; transition: all .15s; position: relative; min-height: 44px; }
     .bnav-item.active { color: var(--accent); }
     .bnav-icon { font-size: 1.2rem; line-height: 1; }
     .bnav-badge { position: absolute; top: 4px; right: calc(50% - 20px); background: var(--red); color: #fff; border-radius: 999px; font-size: .58rem; font-weight: 700; padding: .05rem .35rem; border: 1.5px solid var(--bg2); }
 
-    /* Hamburger on top bar — mobile */
-    #top-bar {
-      display: none;
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 56px; background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      z-index: 250; padding: 0 1rem;
-      align-items: center; justify-content: space-between;
-      padding-top: env(safe-area-inset-top);
-    }
+    /* TOP BAR mobile */
+    #top-bar { display: none; position: fixed; top: 0; left: 0; right: 0; height: 56px; background: var(--bg2); border-bottom: 1px solid var(--border); z-index: 250; padding: 0 1rem; align-items: center; justify-content: space-between; padding-top: env(safe-area-inset-top); }
     #top-bar-title { font-size: .95rem; font-weight: 800; }
     #hamburger-btn { background: transparent; color: var(--text); font-size: 1.3rem; padding: .4rem; border-radius: .5rem; }
 
-    /* ══════════════════════════════════════
-       VOICE ALERT BAR
-    ══════════════════════════════════════ */
-    #voice-alert-bar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 3000;
-      background: linear-gradient(135deg,#1e1b4b,#312e81);
-      border-bottom: 1px solid rgba(99,102,241,.4);
-      padding: .65rem 1rem; display: none;
-      align-items: center; justify-content: space-between; gap: .75rem;
-    }
+    /* VOICE ALERT BAR */
+    #voice-alert-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 3000; background: linear-gradient(135deg,#1e1b4b,#312e81); border-bottom: 1px solid rgba(99,102,241,.4); padding: .65rem 1rem; display: none; align-items: center; justify-content: space-between; gap: .75rem; }
     #voice-alert-bar.show { display: flex; animation: slideDown .3s ease; }
     @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
     .voice-alert-text { font-size: .82rem; font-weight: 600; flex: 1; }
     .voice-alert-btn { padding: .3rem .65rem; border-radius: .5rem; font-size: .75rem; font-weight: 600; cursor: pointer; border: none; }
 
-    /* ══════════════════════════════════════
-       🎤 VOICE FAB
-    ══════════════════════════════════════ */
-    #voice-fab {
-      position: fixed; bottom: 7.5rem; right: 1.25rem; z-index: 2000;
-      width: 52px; height: 52px; border-radius: 50%;
-      background: linear-gradient(135deg,#ef4444,#f97316);
-      box-shadow: 0 4px 20px rgba(239,68,68,.5);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; border: none;
-    }
+    /* VOICE FAB */
+    #voice-fab { position: fixed; bottom: 7.5rem; right: 1.25rem; z-index: 2000; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#ef4444,#f97316); box-shadow: 0 4px 20px rgba(239,68,68,.5); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
     #voice-fab.listening { animation: voice-pulse 1s infinite; }
-    @keyframes voice-pulse {
-      0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6),0 4px 20px rgba(239,68,68,.5)}
-      50%{box-shadow:0 0 0 16px rgba(239,68,68,0),0 4px 20px rgba(239,68,68,.5)}
-    }
+    @keyframes voice-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6),0 4px 20px rgba(239,68,68,.5)} 50%{box-shadow:0 0 0 16px rgba(239,68,68,0),0 4px 20px rgba(239,68,68,.5)} }
     #voice-tooltip { position: fixed; bottom: 12rem; right: 1rem; z-index: 2001; background: var(--card); border: 1px solid var(--border); border-radius: .85rem; padding: .75rem 1rem; font-size: .82rem; max-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.4); display: none; }
     #voice-tooltip.show { display: block; }
-    #voice-result-panel {
-      position: fixed; bottom: 13rem; right: 1rem; z-index: 2001;
-      background: var(--card); border: 1px solid var(--accent);
-      border-radius: 1rem; padding: 1.1rem; width: min(290px, calc(100vw - 2rem));
-      box-shadow: 0 12px 40px rgba(0,0,0,.5); display: none;
-    }
+    #voice-result-panel { position: fixed; bottom: 13rem; right: 1rem; z-index: 2001; background: var(--card); border: 1px solid var(--accent); border-radius: 1rem; padding: 1.1rem; width: min(290px, calc(100vw - 2rem)); box-shadow: 0 12px 40px rgba(0,0,0,.5); display: none; }
     #voice-result-panel.show { display: block; animation: slideUp .2s ease; }
     @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
     .voice-transcript { font-size: .83rem; color: var(--muted); margin-bottom: .75rem; font-style: italic; }
@@ -269,31 +196,11 @@
     .voice-field span:last-child { font-weight: 700; }
     .voice-actions { display: flex; gap: .4rem; }
 
-    /* ══════════════════════════════════════
-       AI PANEL
-    ══════════════════════════════════════ */
-    #ai-fab {
-      position: fixed; bottom: 2rem; right: 1.25rem; z-index: 2000;
-      width: 58px; height: 58px; border-radius: 50%;
-      background: linear-gradient(135deg,#4f46e5,#7c3aed);
-      box-shadow: 0 4px 24px rgba(99,102,241,.55);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; border: none; animation: pulse-ring 3s infinite;
-    }
-    @keyframes pulse-ring {
-      0%  {box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 0 rgba(99,102,241,.4)}
-      50% {box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 10px rgba(99,102,241,.0)}
-      100%{box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 0 rgba(99,102,241,.0)}
-    }
+    /* AI PANEL */
+    #ai-fab { position: fixed; bottom: 2rem; right: 1.25rem; z-index: 2000; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg,#4f46e5,#7c3aed); box-shadow: 0 4px 24px rgba(99,102,241,.55); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; animation: pulse-ring 3s infinite; }
+    @keyframes pulse-ring { 0%{box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 0 rgba(99,102,241,.4)} 50%{box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 10px rgba(99,102,241,.0)} 100%{box-shadow:0 4px 24px rgba(99,102,241,.55),0 0 0 0 rgba(99,102,241,.0)} }
     #ai-fab .ai-notif { position: absolute; top: 3px; right: 3px; width: 14px; height: 14px; background: var(--red); border-radius: 50%; border: 2px solid var(--bg); display: none; }
-    #ai-panel {
-      position: fixed; z-index: 2000;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 1.4rem; box-shadow: 0 24px 64px rgba(0,0,0,.65);
-      display: none; flex-direction: column; overflow: hidden;
-      /* Desktop position */
-      bottom: 5.5rem; right: 1.25rem; width: 390px; height: 580px;
-    }
+    #ai-panel { position: fixed; z-index: 2000; background: var(--card); border: 1px solid var(--border); border-radius: 1.4rem; box-shadow: 0 24px 64px rgba(0,0,0,.65); display: none; flex-direction: column; overflow: hidden; bottom: 5.5rem; right: 1.25rem; width: 390px; height: 580px; }
     #ai-panel.open { display: flex; animation: slideUp .25s ease; }
     .ai-header { padding: .9rem 1.1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .7rem; background: linear-gradient(135deg,rgba(79,70,229,.2),rgba(124,58,237,.1)); }
     .ai-avatar-wrap { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
@@ -332,112 +239,45 @@
     .ai-send-btn:disabled { opacity: .4; cursor: not-allowed; }
     .ai-mic-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: var(--red); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; font-size: .85rem; }
     .ai-mic-btn.active { background: var(--red); color: #fff; }
-    .ai-key-banner { background: rgba(99,102,241,.08); border: 1px solid rgba(99,102,241,.3); border-radius: .85rem; padding: 1rem; margin: .75rem; }
-    .ai-key-banner p { font-size: .82rem; color: var(--muted); margin-bottom: .6rem; }
-    .ai-key-banner button { margin-top: .5rem; width: 100%; }
 
-    /* ══════════════════════════════════════════════════════════
-       📱 MOBILE — < 640px
-       - Sidebar hidden, slides in from left
-       - Bottom navigation bar
-       - Top bar with hamburger
-       - Full-width panels
-       - Larger touch targets
-    ══════════════════════════════════════════════════════════ */
+    /* RESPONSIVE */
     @media (max-width: 639px) {
       body { overflow: hidden; }
-
-      /* Hide desktop sidebar by default */
-      #sidebar {
-        position: fixed; top: 0; left: 0; bottom: 0;
-        transform: translateX(-100%);
-        width: 280px; z-index: 400;
-        box-shadow: 4px 0 24px rgba(0,0,0,.4);
-      }
+      #sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); width: 280px; z-index: 400; box-shadow: 4px 0 24px rgba(0,0,0,.4); }
       #sidebar.open { transform: translateX(0); }
       #sidebar-overlay.show { display: block; }
       #sidebar-close-btn { display: block; }
-
-      /* Show top bar and bottom nav */
       #top-bar { display: flex; }
       #bottom-nav { display: block; }
-
-      /* Push main content below top bar and above bottom nav */
       #app { padding-top: 56px; padding-bottom: var(--bottom-nav-h); }
       #main { padding: 1rem .9rem; padding-bottom: calc(var(--bottom-nav-h) + 1rem); }
-
-      /* Stack stat cards 2x2 */
       .stat-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
       .stat-value { font-size: 1.4rem; }
       .stat-label { font-size: .68rem; }
-
-      /* Single column charts */
       .charts-grid { grid-template-columns: 1fr; }
-
-      /* Full width customers */
       .customer-grid { grid-template-columns: 1fr; }
-
-      /* Voice result panel — full width bottom */
       #voice-result-panel { left: .75rem; right: .75rem; width: auto; bottom: calc(var(--bottom-nav-h) + 5rem); }
-
-      /* Voice & AI FABs — adjust positions */
       #voice-fab { bottom: calc(var(--bottom-nav-h) + 4.5rem); right: .9rem; width: 50px; height: 50px; }
       #ai-fab { bottom: calc(var(--bottom-nav-h) + 1rem); right: .9rem; width: 54px; height: 54px; }
-
-      /* AI panel — full width slide up */
-      #ai-panel {
-        bottom: var(--bottom-nav-h); right: 0; left: 0; width: 100%;
-        border-radius: 1.25rem 1.25rem 0 0; height: 75vh;
-        border-left: none; border-right: none; border-bottom: none;
-      }
-
-      /* Dashboard header stack */
+      #ai-panel { bottom: var(--bottom-nav-h); right: 0; left: 0; width: 100%; border-radius: 1.25rem 1.25rem 0 0; height: 75vh; border-left: none; border-right: none; border-bottom: none; }
       .dashboard-header { flex-direction: column; align-items: flex-start; }
-      .dashboard-header > div:last-child { align-self: flex-end; }
-
-      /* Reminder rows */
       .reminder-row { flex-direction: column; align-items: flex-start; }
       .reminder-row > div:last-child { width: 100%; }
-
-      /* Tables: allow horizontal scroll */
       .table-wrap { overflow-x: auto; }
-
-      /* Larger form inputs */
       input, select, textarea { font-size: 16px; padding: .75rem .9rem; }
       .btn-primary { padding: .8rem 1.4rem; font-size: 1rem; }
       .btn-green, .btn-orange { padding: .7rem 1.1rem; font-size: .9rem; }
-
-      /* Toast higher */
       .toast { bottom: calc(var(--bottom-nav-h) + 1rem); }
-
-      /* Voice alert bar — below top bar on mobile */
       #voice-alert-bar { top: 56px; }
-
-      /* Cart add row — stack */
       .cart-add-row { grid-template-columns: 1fr 1fr; }
       .cart-add-row .btn-primary { margin-top: 0 !important; grid-column: span 2; }
-
-      /* Grid2 stays 2 col */
       .grid2 { grid-template-columns: 1fr 1fr; }
-
-      /* Modal full width sheet */
       .modal-box { max-height: 88vh; border-radius: 1.4rem 1.4rem 0 0; padding: 1.25rem 1rem 1.5rem; }
       .modal-box-wide { max-width: 100%; }
-
-      /* Page header */
       .page-header h1 { font-size: 1.3rem; }
     }
-
-    /* ══════════════════════════════════════════════════════════
-       📟 SMALL TABLET / LARGE PHONE — 640px–767px
-    ══════════════════════════════════════════════════════════ */
     @media (min-width: 640px) and (max-width: 767px) {
-      #sidebar {
-        position: fixed; top: 0; left: 0; bottom: 0;
-        transform: translateX(-100%);
-        width: 260px; z-index: 400;
-        box-shadow: 4px 0 24px rgba(0,0,0,.4);
-      }
+      #sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); width: 260px; z-index: 400; box-shadow: 4px 0 24px rgba(0,0,0,.4); }
       #sidebar.open { transform: translateX(0); }
       #sidebar-overlay.show { display: block; }
       #sidebar-close-btn { display: block; }
@@ -454,38 +294,20 @@
       #voice-alert-bar { top: 56px; }
       input, select { font-size: 16px; }
     }
-
-    /* ══════════════════════════════════════════════════════════
-       📱 TABLET PORTRAIT — 768px–1023px (iPad portrait etc)
-    ══════════════════════════════════════════════════════════ */
     @media (min-width: 768px) and (max-width: 1023px) {
       :root { --sidebar-w: 200px; }
-
-      /* Sidebar visible but narrower, icons only on very small tablets */
       #sidebar { width: var(--sidebar-w); }
       #main { padding: 1.5rem 1.5rem; }
-
       .stat-grid { grid-template-columns: repeat(2,1fr); gap: .85rem; }
       .charts-grid { grid-template-columns: 1fr; }
       .customer-grid { grid-template-columns: repeat(2,1fr); }
-
-      /* Slightly smaller FABs */
       #ai-fab { width: 56px; height: 56px; }
       #voice-fab { width: 50px; height: 50px; }
-
-      /* AI panel takes more space */
       #ai-panel { width: 360px; height: 560px; }
-
       .modal-box { max-width: 520px; border-radius: 1.25rem; }
       .modal-overlay { align-items: center; }
-
-      /* Tables scroll */
       .table-wrap { overflow-x: auto; }
     }
-
-    /* ══════════════════════════════════════════════════════════
-       💻 TABLET LANDSCAPE / SMALL DESKTOP — 1024px–1279px
-    ══════════════════════════════════════════════════════════ */
     @media (min-width: 1024px) and (max-width: 1279px) {
       :root { --sidebar-w: 210px; }
       .charts-grid { grid-template-columns: 1fr 260px; }
@@ -494,33 +316,21 @@
       .modal-overlay { align-items: center; }
       .modal-box { border-radius: 1.25rem; }
     }
-
-    /* ══════════════════════════════════════════════════════════
-       🖥 DESKTOP — >= 1280px (already default, just polish)
-    ══════════════════════════════════════════════════════════ */
     @media (min-width: 1280px) {
       :root { --sidebar-w: 230px; }
       .stat-grid { grid-template-columns: repeat(4,1fr); }
       .charts-grid { grid-template-columns: 1fr 300px; }
       .customer-grid { grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); }
-      .modal-overlay { align-items: center; }
+      .modal-overlay { align-items: center; padding: 1rem; }
       .modal-box { border-radius: 1.25rem; }
       .modal-box::before { display: none; }
-      /* On desktop, modal centers instead of sheet */
-      .modal-overlay { padding: 1rem; }
     }
-
-    /* ══════════════════════════════════════════════════════════
-       📟 LARGE SCREEN — >= 1600px  
-    ══════════════════════════════════════════════════════════ */
     @media (min-width: 1600px) {
       :root { --sidebar-w: 260px; }
       #main { padding: 2.5rem 3rem; }
       .stat-value { font-size: 2.1rem; }
       .customer-grid { grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); }
     }
-
-    /* Touch hover fix */
     @media (hover: none) {
       .stat-card:hover { transform: none; box-shadow: none; }
       .customer-card:hover { transform: none; border-color: var(--border); }
@@ -530,7 +340,6 @@
 </head>
 <body>
 
-<!-- Voice Alert Bar -->
 <div id="voice-alert-bar">
   <span style="font-size:1.1rem">🔔</span>
   <span class="voice-alert-text" id="voice-alert-text"></span>
@@ -540,18 +349,16 @@
   </div>
 </div>
 
-<!-- Top Bar (Mobile) -->
 <div id="top-bar">
   <button id="hamburger-btn" onclick="toggleSidebar()">☰</button>
-  <span id="top-bar-title">HisabKitab</span>
+  <span id="top-bar-title">KhataKitab</span>
   <button onclick="toggleAI()" style="background:transparent;color:var(--accent);font-size:1.2rem;padding:.3rem">🤖</button>
 </div>
 
-<!-- Sidebar Overlay (Mobile) -->
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <div id="loading">
-  <img src="logo.png" height="80" style="object-fit:contain;max-width:260px" alt="HisabKitab"/>
+  <img src="logo.png" height="80" style="object-fit:contain;max-width:260px" alt="KhataKitab"/>
   <div class="spinner"></div>
 </div>
 <div class="toast" id="toast"></div>
@@ -560,8 +367,8 @@
 <div id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
-      <img src="logo.png" height="70" style="object-fit:contain;max-width:220px" alt="HisabKitab"/>
-      <div><p style="font-weight:800;font-size:1rem;margin:0">HisabKitab</p><span style="font-size:.75rem;color:var(--muted)">Dukaan Management</span></div>
+      <img src="logo.png" height="70" style="object-fit:contain;max-width:220px" alt="KhataKitab"/>
+      <div><p style="font-weight:800;font-size:1rem;margin:0">KhataKitab</p><span style="font-size:.75rem;color:var(--muted)">Dukaan Management</span></div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchAuth('login')">Login</button>
@@ -572,7 +379,7 @@
       <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"/></div>
       <a class="forgot-link" onclick="showForgot()">Forgot password?</a>
       <p class="err-msg" id="l-err"></p>
-      <button class="btn-primary" style="width:100%" onclick="doLogin()">Login to HisabKitab</button>
+      <button class="btn-primary" style="width:100%" onclick="doLogin()">Login to KhataKitab</button>
     </div>
     <div id="forgot-panel" class="forgot-panel">
       <button class="back-btn" onclick="hideForgot()">← Back to Login</button>
@@ -604,7 +411,7 @@
 <div id="app" style="display:none">
   <aside id="sidebar">
     <div class="sidebar-logo">
-      <img src="logo.png" height="55" style="object-fit:contain;max-width:160px" alt="HisabKitab"/>
+      <img src="logo.png" height="55" style="object-fit:contain;max-width:160px" alt="KhataKitab"/>
       <button id="sidebar-close-btn" onclick="closeSidebar()">✕</button>
     </div>
     <div class="lang-toggle">
@@ -627,26 +434,13 @@
     </div>
   </aside>
 
-  <!-- Bottom Nav (Mobile) -->
   <div id="bottom-nav">
     <nav>
-      <button class="bnav-item active" onclick="goto('dashboard')" id="bnav-dashboard">
-        <span class="bnav-icon">📊</span><span>Home</span>
-      </button>
-      <button class="bnav-item" onclick="goto('customers')" id="bnav-customers">
-        <span class="bnav-icon">👥</span><span>Customers</span>
-      </button>
-      <button class="bnav-item" onclick="goto('udhaar')" id="bnav-udhaar">
-        <span class="bnav-icon">📒</span><span>Khata</span>
-      </button>
-      <button class="bnav-item" onclick="goto('inventory')" id="bnav-inventory">
-        <span class="bnav-icon">📦</span><span>Stock</span>
-        <span class="bnav-badge" id="bnav-badge-inventory" style="display:none"></span>
-      </button>
-      <button class="bnav-item" onclick="goto('reminders')" id="bnav-reminders">
-        <span class="bnav-icon">🔔</span><span>Dues</span>
-        <span class="bnav-badge" id="bnav-badge-reminders" style="display:none"></span>
-      </button>
+      <button class="bnav-item active" onclick="goto('dashboard')" id="bnav-dashboard"><span class="bnav-icon">📊</span><span>Home</span></button>
+      <button class="bnav-item" onclick="goto('customers')" id="bnav-customers"><span class="bnav-icon">👥</span><span>Customers</span></button>
+      <button class="bnav-item" onclick="goto('udhaar')" id="bnav-udhaar"><span class="bnav-icon">📒</span><span>Khata</span></button>
+      <button class="bnav-item" onclick="goto('inventory')" id="bnav-inventory"><span class="bnav-icon">📦</span><span>Stock</span><span class="bnav-badge" id="bnav-badge-inventory" style="display:none"></span></button>
+      <button class="bnav-item" onclick="goto('reminders')" id="bnav-reminders"><span class="bnav-icon">🔔</span><span>Dues</span><span class="bnav-badge" id="bnav-badge-reminders" style="display:none"></span></button>
     </nav>
   </div>
 
@@ -659,8 +453,8 @@
           <p style="color:var(--muted);font-size:.88rem;margin-top:.15rem" data-i="dashboard_sub">Welcome back! Here's your shop at a glance.</p>
         </div>
         <div style="display:flex;align-items:center;gap:.6rem">
-          <button onclick="speakAlerts()" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);border-radius:.7rem;padding:.45rem .8rem;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🔊 <span class="hide-xs" data-i="speak_alerts">Alerts Sunao</span></button>
-          <img src="logo.png" height="55" style="object-fit:contain;max-width:160px;margin:-10px 0" alt="HisabKitab" class="hide-xs"/>
+          <button onclick="speakAlerts()" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);border-radius:.7rem;padding:.45rem .8rem;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🔊 Alerts Sunao</button>
+          <img src="logo.png" height="55" style="object-fit:contain;max-width:160px;margin:-10px 0" alt="KhataKitab" class="hide-xs"/>
           <div style="text-align:right">
             <p style="margin:0;font-size:.72rem;color:var(--muted)" id="dash-shop-name"></p>
             <p style="margin:0;font-size:.68rem;color:var(--muted)" id="dash-date"></p>
@@ -707,6 +501,7 @@
         <div style="display:flex;gap:.6rem;margin-bottom:1.25rem;flex-wrap:wrap">
           <button class="btn-orange" onclick="openModal('addCreditModal')">+ Credit</button>
           <button class="btn-green" id="btn-payment" onclick="openModal('addPaymentModal')">✓ Payment</button>
+          <button onclick="downloadKhataPDF()" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.4);color:var(--accent);border-radius:.7rem;padding:.6rem 1.1rem;font-weight:700;font-size:.88rem;cursor:pointer">📄 PDF Download</button>
         </div>
         <div class="table-wrap"><table id="khata-table"><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th><th>Balance</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="4">Net Balance</td><td id="khata-total">₹0</td></tr></tfoot></table></div>
       </div>
@@ -735,7 +530,7 @@
   </main>
 </div>
 
-<!-- 🎤 VOICE FAB -->
+<!-- VOICE FAB -->
 <button id="voice-fab" onclick="toggleVoice()" title="Voice Entry">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
     <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
@@ -761,7 +556,7 @@
 </div>
 
 <!-- AI FAB -->
-<button id="ai-fab" onclick="toggleAI()" title="HisabKitab AI">
+<button id="ai-fab" onclick="toggleAI()" title="KhataKitab AI">
   <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
     <circle cx="32" cy="32" r="28" fill="rgba(255,255,255,0.15)"/>
     <path d="M20 28c0-6.6 5-11 12-11s12 4.4 12 11c3 .6 6 3 6 7s-3 7-6 7H22c-3 0-6-2.4-6-7s3-6.4 4-7z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/>
@@ -784,7 +579,10 @@
       </svg>
       <div class="ai-online-dot"></div>
     </div>
-    <div class="ai-header-info"><p>HisabKitab AI</p><span>● Online · Claude</span></div>
+    <div class="ai-header-info">
+      <p>KhataKitab AI</p>
+      <span>● Online · Dukaan Assistant</span>
+    </div>
     <div class="ai-header-btns">
       <button class="ai-speak-btn" id="ai-speak-btn" onclick="toggleAiSpeak()">🔊</button>
       <button class="ai-close" onclick="toggleAI()">✕</button>
@@ -801,15 +599,11 @@
     <div class="ai-msg ai">
       <div class="ai-msg-avatar">🤖</div>
       <div class="ai-msg-bubble">
-        <strong>Namaste! 🙏 Main HisabKitab AI hoon.</strong><br/>
-        Kuch bhi poochho — summary, overdue, restock, WhatsApp messages!<br/>
-        🔊 Speaker button se main bol bhi sakta hoon.
+        <strong>Namaste! 🙏 Main KhataKitab AI hoon.</strong><br/>
+        Aapki dukaan ke baare mein kuch bhi poochho!<br/>
+        📊 Summary · 🔔 Overdue · 📦 Restock · 💬 WhatsApp<br/>
+        🔊 Speaker button se main bol bhi sakta hoon!
       </div>
-    </div>
-    <div id="ai-key-section" class="ai-key-banner" style="display:none">
-      <p>🔑 Claude API key enter karein — <strong>console.anthropic.com</strong> → API Keys</p>
-      <input type="password" id="ai-api-key" placeholder="sk-ant-..."/>
-      <button class="btn-primary" onclick="saveApiKey()">✅ Save & Enable AI</button>
     </div>
   </div>
   <div class="ai-input-row">
@@ -931,191 +725,306 @@
     <button class="btn-green" style="width:100%" onclick="quickPay()">Confirm Payment</button>
   </div>
 </div>
-  
-<script>
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const API = window.location.origin;
-let TOKEN=localStorage.getItem("su_token")||"", USER=JSON.parse(localStorage.getItem("su_user")||"null");
-let CLAUDE_KEY=localStorage.getItem("claude_api_key")||"";
-let currentKhataId=null, currentKhataBalance=0, quickPayCustomerId=null;
-let saleType="cash", cartType="cash", saleMode="single";
-let weeklyChartInstance=null, allCustomers=[], allProducts=[], cart=[];
-let aiOpen=false, aiLoading=false, aiMessages=[];
-let currentLang=localStorage.getItem("hk_lang")||"hi-en";
-let aiSpeakEnabled=false, aiMicListening=false;
-let voiceListening=false, voiceParsed=null;
-let speechSynthesis=window.speechSynthesis, speechRecognition=null;
 
-// ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
+<script>
+// ══════════════════════════════════════════════════════════════
+// ✅ GEMINI AI — FREE, EMBEDDED, NO USER KEY NEEDED
+// ══════════════════════════════════════════════════════════════
+const GEMINI_KEY = "AIzaSyBmPQBCns9FhOYnKJWnVJBxmpFJzHrNGDg";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+
+async function callGemini(userMessage, context) {
+  const langInstruction = context.language === "hi"
+    ? "Respond in Hindi (Devanagari script)."
+    : context.language === "en"
+    ? "Respond in English."
+    : "Respond in Hinglish (mix of Hindi and English, like Indian shopkeepers talk).";
+
+  const systemPrompt = `You are KhataKitab AI — smart dukaan assistant for ${context.shop_name} (owner: ${context.owner}, WhatsApp: ${context.owner_phone}). Today: ${context.today}.
+${langInstruction}
+
+LIVE SHOP DATA:
+${JSON.stringify(context, null, 2)}
+
+Your jobs:
+1. Business summaries with exact numbers
+2. Overdue alerts — exact name, balance, days. 10+ days = URGENT
+3. Restock advice
+4. WhatsApp messages in warm Hinglish. Include owner's number and shop name.
+5. Answer any shop question
+
+Style: Concise, warm, practical. Use ₹. Keep SHORT for voice.`;
+
+  const response = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
+            { text: systemPrompt + "\n\nUser: " + userMessage }
+          ]
+        }
+      ],
+      generationConfig: { maxOutputTokens: 800, temperature: 0.7 }
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error?.message || "Gemini API error");
+  }
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "Koi response nahi mila.";
+}
+
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const API = window.location.origin;
+let TOKEN = localStorage.getItem("su_token") || "",
+    USER  = JSON.parse(localStorage.getItem("su_user") || "null");
+let currentKhataId = null, currentKhataBalance = 0, quickPayCustomerId = null;
+let currentKhataData = null; // for PDF
+let saleType = "cash", cartType = "cash", saleMode = "single";
+let weeklyChartInstance = null, allCustomers = [], allProducts = [], cart = [];
+let aiOpen = false, aiLoading = false, aiMessages = [];
+let currentLang = localStorage.getItem("hk_lang") || "hi-en";
+let aiSpeakEnabled = false, aiMicListening = false;
+let voiceListening = false, voiceParsed = null;
+let speechSynthesis = window.speechSynthesis, speechRecognition = null;
+
+// ── TRANSLATIONS ──────────────────────────────────────────────────────────────
 const T = {
-  "hi": { nav_dashboard:"डैशबोर्ड",nav_customers:"ग्राहक",nav_udhaar:"उधार खाता",nav_inventory:"सामान",nav_sales:"बिक्री",nav_reminders:"याददिहानी",logout:"लॉगआउट",dashboard_title:"डैशबोर्ड",dashboard_sub:"वापस आए! आपकी दुकान का हाल।",total_udhaar:"कुल उधार दिया",lifetime_credit:"कुल उधार",total_collected:"कुल वसूली",payments_received:"भुगतान मिला",pending_udhaar:"बाकी उधार",todays_sales:"आज की बिक्री",cash_credit:"नकद + उधार",weekly_sales:"7 दिन की बिक्री",top_debtors:"सबसे ज्यादा उधार",recent_txn:"हाल के लेनदेन",speak_alerts:"अलर्ट सुनाओ",speak_all:"सब सुनाओ",customers_title:"ग्राहक",add_customer:"+ ग्राहक जोड़ें",udhaar_title:"उधार खाता",udhaar_sub:"ग्राहक पर क्लिक करें।",go_customers:"ग्राहकों पर जाएं →",back:"वापस",current_balance:"मौजूदा बकाया",add_udhaar:"+ उधार जोड़ें",record_payment:"✓ भुगतान दर्ज करें",inventory_title:"सामान",add_product:"+ सामान जोड़ें",sales_title:"बिक्री",new_sale:"🛒 नई बिक्री",reminders_title:"याददिहानी" },
-  "en": { nav_dashboard:"Dashboard",nav_customers:"Customers",nav_udhaar:"Udhaar Khata",nav_inventory:"Inventory",nav_sales:"Sales",nav_reminders:"Reminders",logout:"Logout",dashboard_title:"Dashboard",dashboard_sub:"Welcome back! Here's your shop at a glance.",total_udhaar:"Total Udhaar Given",lifetime_credit:"Lifetime credit",total_collected:"Total Collected",payments_received:"Payments received",pending_udhaar:"Pending Udhaar",todays_sales:"Today's Sales",cash_credit:"Cash + Credit",weekly_sales:"7-Day Sales Overview",top_debtors:"Top Debtors",recent_txn:"Recent Transactions",speak_alerts:"Speak Alerts",speak_all:"Speak All",customers_title:"Customers",add_customer:"+ Add Customer",udhaar_title:"Udhaar Khata",udhaar_sub:"Click a customer to view their ledger.",go_customers:"Go to Customers →",back:"Back",current_balance:"Current Balance",add_udhaar:"+ Add Udhaar",record_payment:"✓ Record Payment",inventory_title:"Inventory",add_product:"+ Add Product",sales_title:"Sales",new_sale:"🛒 New Sale",reminders_title:"Payment Reminders" },
-  "hi-en": { nav_dashboard:"Dashboard",nav_customers:"Customers",nav_udhaar:"Udhaar Khata",nav_inventory:"Inventory",nav_sales:"Sales",nav_reminders:"Reminders",logout:"Logout",dashboard_title:"Dashboard",dashboard_sub:"Namaste! Aapki dukaan ka haal.",total_udhaar:"Total Udhaar Diya",lifetime_credit:"Lifetime credit",total_collected:"Total Vasuli",payments_received:"Payment mila",pending_udhaar:"Baaki Udhaar",todays_sales:"Aaj ki Bikri",cash_credit:"Cash + Udhaar",weekly_sales:"7 Din ki Bikri",top_debtors:"Sabse Zyada Udhaar",recent_txn:"Haal ke Lenden",speak_alerts:"Alerts Sunao",speak_all:"Sab Sunao",customers_title:"Customers",add_customer:"+ Customer Jodo",udhaar_title:"Udhaar Khata",udhaar_sub:"Customer par click karo.",go_customers:"Customers par jao →",back:"Wapas",current_balance:"Abhi Baaki",add_udhaar:"+ Udhaar Jodo",record_payment:"✓ Payment Darj Karo",inventory_title:"Inventory",add_product:"+ Samaan Jodo",sales_title:"Sales",new_sale:"🛒 Nai Bikri",reminders_title:"Payment Reminders" }
+  "hi": { nav_dashboard:"डैशबोर्ड",nav_customers:"ग्राहक",nav_udhaar:"उधार खाता",nav_inventory:"सामान",nav_sales:"बिक्री",nav_reminders:"याददिहानी",logout:"लॉगआउट",dashboard_title:"डैशबोर्ड",dashboard_sub:"वापस आए! आपकी दुकान का हाल।",total_udhaar:"कुल उधार दिया",lifetime_credit:"कुल उधार",total_collected:"कुल वसूली",payments_received:"भुगतान मिला",pending_udhaar:"बाकी उधार",todays_sales:"आज की बिक्री",cash_credit:"नकद + उधार",weekly_sales:"7 दिन की बिक्री",top_debtors:"सबसे ज्यादा उधार",recent_txn:"हाल के लेनदेन",speak_alerts:"अलर्ट सुनाओ",customers_title:"ग्राहक",udhaar_title:"उधार खाता",udhaar_sub:"ग्राहक पर क्लिक करें।",inventory_title:"सामान",sales_title:"बिक्री",reminders_title:"याददिहानी" },
+  "en": { nav_dashboard:"Dashboard",nav_customers:"Customers",nav_udhaar:"Udhaar Khata",nav_inventory:"Inventory",nav_sales:"Sales",nav_reminders:"Reminders",logout:"Logout",dashboard_title:"Dashboard",dashboard_sub:"Welcome back! Here's your shop at a glance.",total_udhaar:"Total Udhaar Given",lifetime_credit:"Lifetime credit",total_collected:"Total Collected",payments_received:"Payments received",pending_udhaar:"Pending Udhaar",todays_sales:"Today's Sales",cash_credit:"Cash + Credit",weekly_sales:"7-Day Sales Overview",top_debtors:"Top Debtors",recent_txn:"Recent Transactions",speak_alerts:"Speak Alerts",customers_title:"Customers",udhaar_title:"Udhaar Khata",udhaar_sub:"Click a customer to view their ledger.",inventory_title:"Inventory",sales_title:"Sales",reminders_title:"Payment Reminders" },
+  "hi-en": { nav_dashboard:"Dashboard",nav_customers:"Customers",nav_udhaar:"Udhaar Khata",nav_inventory:"Inventory",nav_sales:"Sales",nav_reminders:"Reminders",logout:"Logout",dashboard_title:"Dashboard",dashboard_sub:"Namaste! Aapki dukaan ka haal.",total_udhaar:"Total Udhaar Diya",lifetime_credit:"Lifetime credit",total_collected:"Total Vasuli",payments_received:"Payment mila",pending_udhaar:"Baaki Udhaar",todays_sales:"Aaj ki Bikri",cash_credit:"Cash + Udhaar",weekly_sales:"7 Din ki Bikri",top_debtors:"Sabse Zyada Udhaar",recent_txn:"Haal ke Lenden",speak_alerts:"Alerts Sunao",customers_title:"Customers",udhaar_title:"Udhaar Khata",udhaar_sub:"Customer par click karo.",inventory_title:"Inventory",sales_title:"Sales",reminders_title:"Payment Reminders" }
 };
-function t(key){ return T[currentLang]?.[key]||T["en"][key]||key; }
-function setLang(lang){
-  currentLang=lang; localStorage.setItem("hk_lang",lang);
-  document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active"));
-  document.getElementById("lang-"+lang.replace("-",""))?.classList.add("active") || document.getElementById("lang-hi-en")?.classList.add("active");
-  document.querySelectorAll("[data-i]").forEach(el=>{
-    const key=el.getAttribute("data-i");
-    if(el.tagName==="INPUT"||el.tagName==="TEXTAREA") el.placeholder=t(key);
-    else el.textContent=t(key);
+function t(key) { return T[currentLang]?.[key] || T["en"][key] || key; }
+function setLang(lang) {
+  currentLang = lang; localStorage.setItem("hk_lang", lang);
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("lang-" + lang.replace("-",""))?.classList.add("active") ||
+  document.getElementById("lang-hi-en")?.classList.add("active");
+  document.querySelectorAll("[data-i]").forEach(el => {
+    const key = el.getAttribute("data-i");
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.placeholder = t(key);
+    else el.textContent = t(key);
   });
 }
 
-// ─── SIDEBAR (mobile) ─────────────────────────────────────────────────────────
-function toggleSidebar(){ document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebar-overlay").classList.toggle("show"); }
-function closeSidebar(){ document.getElementById("sidebar").classList.remove("open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebar-overlay").classList.toggle("show"); }
+function closeSidebar()  { document.getElementById("sidebar").classList.remove("open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-const fmt=n=>"₹"+Number(n).toLocaleString("en-IN");
-const today=()=>new Date().toISOString().slice(0,10);
-const todayDisplay=()=>new Date().toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
-function safeDate(raw){
-  if(!raw||!raw.trim()) return today();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-  const p=raw.split("/");
-  if(p.length===3){
-    if(p[2].length===4) return `${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`;
-    if(p[0].length===4) return `${p[0]}-${p[1].padStart(2,"0")}-${p[2].padStart(2,"0")}`;
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+const fmt = n => "₹" + Number(n).toLocaleString("en-IN");
+const today = () => new Date().toISOString().slice(0,10);
+const todayDisplay = () => new Date().toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+function safeDate(raw) {
+  if (!raw || !raw.trim()) return today();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const p = raw.split("/");
+  if (p.length === 3) {
+    if (p[2].length === 4) return `${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}`;
+    if (p[0].length === 4) return `${p[0]}-${p[1].padStart(2,"0")}-${p[2].padStart(2,"0")}`;
   }
-  const d=new Date(raw); return isNaN(d)?today():d.toISOString().slice(0,10);
+  const d = new Date(raw); return isNaN(d) ? today() : d.toISOString().slice(0,10);
 }
-const showErr=(id,msg)=>{const e=document.getElementById(id);e.textContent=msg;e.style.display="block";};
-const hideErr=id=>{const e=document.getElementById(id);e.textContent="";e.style.display="none";};
-const val=id=>document.getElementById(id).value.trim();
-const setVal=(id,v)=>document.getElementById(id).value=v;
-function showToast(msg,type="success"){const t=document.getElementById("toast");t.textContent=msg;t.className=`toast show ${type}`;setTimeout(()=>t.className="toast",2800);}
+const showErr = (id, msg) => { const e = document.getElementById(id); e.textContent = msg; e.style.display = "block"; };
+const hideErr = id => { const e = document.getElementById(id); e.textContent = ""; e.style.display = "none"; };
+const val = id => document.getElementById(id).value.trim();
+const setVal = (id, v) => document.getElementById(id).value = v;
+function showToast(msg, type="success") { const t = document.getElementById("toast"); t.textContent = msg; t.className = `toast show ${type}`; setTimeout(() => t.className = "toast", 2800); }
 
-async function api(method,path,body=null){
-  const opts={method,headers:{"Content-Type":"application/json"}};
-  if(TOKEN) opts.headers["Authorization"]="Bearer "+TOKEN;
-  if(body) opts.body=JSON.stringify(body);
-  const res=await fetch(API+path,opts);
-  const data=await res.json();
-  if(!res.ok){
-    let msg="Something went wrong";
-    if(typeof data.detail==="string") msg=data.detail;
-    else if(Array.isArray(data.detail)) msg=data.detail.map(d=>d.msg||JSON.stringify(d)).join(", ");
-    else if(data.detail) msg=JSON.stringify(data.detail);
+async function api(method, path, body=null) {
+  const opts = { method, headers: { "Content-Type": "application/json" } };
+  if (TOKEN) opts.headers["Authorization"] = "Bearer " + TOKEN;
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  const data = await res.json();
+  if (!res.ok) {
+    let msg = "Something went wrong";
+    if (typeof data.detail === "string") msg = data.detail;
+    else if (Array.isArray(data.detail)) msg = data.detail.map(d => d.msg || JSON.stringify(d)).join(", ");
+    else if (data.detail) msg = JSON.stringify(data.detail);
     throw new Error(msg);
   }
   return data;
 }
 
-// ─── SPEECH ───────────────────────────────────────────────────────────────────
-function speak(text){ if(!speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang=currentLang==="en"?"en-IN":"hi-IN"; u.rate=0.9; speechSynthesis.speak(u); }
-function speakAlerts(){ api("GET","/reminders").then(rem=>{ const c=rem.filter(r=>r.days_since_credit>=10); if(!c.length){speak("Sab theek hai.");return;} let m=`${c.length} customer ka payment baaki hai. `; c.forEach(x=>{ m+=`${x.name} ka ${x.balance} rupaye ${x.days_since_credit} din se baaki hai. `; }); speak(m); }).catch(()=>{}); }
-function speakAllReminders(){ speakAlerts(); }
-function speakAiResponse(text){ speak(text.replace(/\*\*(.*?)\*\*/g,"$1").replace(/[#*]/g,"").replace(/<[^>]*>/g,"")); }
+// ── SPEECH ────────────────────────────────────────────────────────────────────
+function speak(text) { if (!speechSynthesis) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = currentLang === "en" ? "en-IN" : "hi-IN"; u.rate = 0.9; speechSynthesis.speak(u); }
+function speakAlerts() { api("GET","/reminders").then(rem => { const c = rem.filter(r => r.days_since_credit >= 10); if (!c.length) { speak("Sab theek hai."); return; } let m = `${c.length} customer ka payment baaki hai. `; c.forEach(x => { m += `${x.name} ka ${x.balance} rupaye ${x.days_since_credit} din se baaki hai. `; }); speak(m); }).catch(()=>{}); }
+function speakAllReminders() { speakAlerts(); }
+function speakAiResponse(text) { speak(text.replace(/\*\*(.*?)\*\*/g,"$1").replace(/[#*]/g,"").replace(/<[^>]*>/g,"")); }
 
-// ─── AUTH ─────────────────────────────────────────────────────────────────────
-function switchAuth(tab){ document.getElementById("login-form").style.display=tab==="login"?"block":"none"; document.getElementById("register-form").style.display=tab==="register"?"block":"none"; document.getElementById("forgot-panel").style.display="none"; document.querySelectorAll(".auth-tab").forEach((b,i)=>b.classList.toggle("active",(i===0&&tab==="login")||(i===1&&tab==="register"))); }
-function showForgot(){ document.getElementById("login-form").style.display="none"; document.getElementById("forgot-panel").style.display="block"; hideErr("fp-err"); }
-function hideForgot(){ document.getElementById("forgot-panel").style.display="none"; document.getElementById("login-form").style.display="block"; }
-async function doResetPassword(){ hideErr("fp-err"); const e=val("fp-email"),p=val("fp-newpass"); if(!e) return showErr("fp-err","Email enter karo"); if(!p||p.length<6) return showErr("fp-err","Password min 6 characters"); try{ await api("POST","/auth/reset-password",{email:e,new_password:p}); showToast("Password reset! Login karo."); hideForgot(); }catch(er){showErr("fp-err",er.message);} }
-async function doLogin(){ hideErr("l-err"); try{ const d=await api("POST","/auth/login",{email:val("l-email"),password:val("l-pass")}); TOKEN=d.token; USER=d.user; localStorage.setItem("su_token",TOKEN); localStorage.setItem("su_user",JSON.stringify(USER)); initApp(); }catch(e){showErr("l-err",e.message);} }
-async function doRegister(){ hideErr("r-err"); const phone=val("r-phone"); if(!phone||phone.length<10) return showErr("r-err","Valid 10-digit WhatsApp number enter karo"); try{ await api("POST","/auth/register",{name:val("r-name"),email:val("r-email"),password:val("r-pass"),shop_name:val("r-shop")||"My Dukaan",phone:"+91"+phone}); showToast("Register ho gaya! Login karo."); switchAuth("login"); }catch(e){showErr("r-err",e.message);} }
-function logout(){ TOKEN=""; USER=null; speechSynthesis?.cancel(); localStorage.removeItem("su_token"); localStorage.removeItem("su_user"); document.getElementById("app").style.display="none"; document.getElementById("auth-screen").style.display="flex"; }
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function switchAuth(tab) { document.getElementById("login-form").style.display = tab==="login"?"block":"none"; document.getElementById("register-form").style.display = tab==="register"?"block":"none"; document.getElementById("forgot-panel").style.display = "none"; document.querySelectorAll(".auth-tab").forEach((b,i) => b.classList.toggle("active",(i===0&&tab==="login")||(i===1&&tab==="register"))); }
+function showForgot() { document.getElementById("login-form").style.display = "none"; document.getElementById("forgot-panel").style.display = "block"; hideErr("fp-err"); }
+function hideForgot() { document.getElementById("forgot-panel").style.display = "none"; document.getElementById("login-form").style.display = "block"; }
+async function doResetPassword() { hideErr("fp-err"); const e=val("fp-email"),p=val("fp-newpass"); if(!e) return showErr("fp-err","Email enter karo"); if(!p||p.length<6) return showErr("fp-err","Password min 6 characters"); try { await api("POST","/auth/reset-password",{email:e,new_password:p}); showToast("Password reset! Login karo."); hideForgot(); } catch(er) { showErr("fp-err",er.message); } }
+async function doLogin() { hideErr("l-err"); try { const d = await api("POST","/auth/login",{email:val("l-email"),password:val("l-pass")}); TOKEN=d.token; USER=d.user; localStorage.setItem("su_token",TOKEN); localStorage.setItem("su_user",JSON.stringify(USER)); initApp(); } catch(e) { showErr("l-err",e.message); } }
+async function doRegister() { hideErr("r-err"); const phone=val("r-phone"); if(!phone||phone.length<10) return showErr("r-err","Valid 10-digit WhatsApp number enter karo"); try { await api("POST","/auth/register",{name:val("r-name"),email:val("r-email"),password:val("r-pass"),shop_name:val("r-shop")||"My Dukaan",phone:"+91"+phone}); showToast("Register ho gaya! Login karo."); switchAuth("login"); } catch(e) { showErr("r-err",e.message); } }
+function logout() { TOKEN=""; USER=null; speechSynthesis?.cancel(); localStorage.removeItem("su_token"); localStorage.removeItem("su_user"); document.getElementById("app").style.display="none"; document.getElementById("auth-screen").style.display="flex"; }
 
-function initApp(){
-  document.getElementById("auth-screen").style.display="none";
-  document.getElementById("app").style.display="flex";
-  document.getElementById("loading").style.display="none";
-  document.getElementById("sidebar-shop").textContent=USER?.shop_name||"";
-  document.getElementById("sidebar-phone").textContent=USER?.phone?"📱 "+USER.phone:"";
-  document.getElementById("dash-shop-name").textContent=USER?.shop_name||"";
-  document.getElementById("dash-date").textContent=todayDisplay();
-  if(!CLAUDE_KEY) document.getElementById("ai-key-section").style.display="block";
+function initApp() {
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("sidebar-shop").textContent = USER?.shop_name || "";
+  document.getElementById("sidebar-phone").textContent = USER?.phone ? "📱 " + USER.phone : "";
+  document.getElementById("dash-shop-name").textContent = USER?.shop_name || "";
+  document.getElementById("dash-date").textContent = todayDisplay();
   setLang(currentLang);
   goto("dashboard");
-  setTimeout(autoCheckAlerts,2000);
+  setTimeout(autoCheckAlerts, 2000);
 }
 
-async function autoCheckAlerts(){
-  try{
-    const rem=await api("GET","/reminders");
-    const crit=rem.filter(r=>r.days_since_credit>=10);
-    if(crit.length>0){
-      document.getElementById("voice-alert-text").textContent=`${crit.length} customer${crit.length>1?"s":""}  ka payment 10+ din se baaki: `+crit.slice(0,2).map(c=>`${c.name} (${fmt(c.balance)})`).join(", ");
+async function autoCheckAlerts() {
+  try {
+    const rem = await api("GET","/reminders");
+    const crit = rem.filter(r => r.days_since_credit >= 10);
+    if (crit.length > 0) {
+      document.getElementById("voice-alert-text").textContent = `${crit.length} customer${crit.length>1?"s":""} ka payment 10+ din se baaki: ` + crit.slice(0,2).map(c=>`${c.name} (${fmt(c.balance)})`).join(", ");
       document.getElementById("voice-alert-bar").classList.add("show");
-      document.getElementById("ai-notif").style.display="block";
-      setTimeout(speakAlerts,1500);
+      document.getElementById("ai-notif").style.display = "block";
+      setTimeout(speakAlerts, 1500);
     }
-  }catch(e){}
+  } catch(e) {}
 }
-function dismissVoiceAlert(){ document.getElementById("voice-alert-bar").classList.remove("show"); }
+function dismissVoiceAlert() { document.getElementById("voice-alert-bar").classList.remove("show"); }
 
-function goto(tab){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("page-"+tab).classList.add("active");
-  const tabs=["dashboard","customers","udhaar","inventory","sales","reminders"];
-  // Desktop sidebar
-  document.querySelectorAll("#nav .nav-item").forEach((b,i)=>b.classList.toggle("active",tabs[i]===tab));
-  // Bottom nav
-  const bnavTabs=["dashboard","customers","udhaar","inventory","reminders"];
-  bnavTabs.forEach(t=>{ const el=document.getElementById("bnav-"+t); if(el) el.classList.toggle("active",t===tab); });
-  // Update top bar title
-  document.getElementById("top-bar-title").textContent=T[currentLang]?.["nav_"+tab]||tab.charAt(0).toUpperCase()+tab.slice(1);
-  if(tab==="dashboard") loadDashboard();
-  if(tab==="customers") loadCustomers();
-  if(tab==="inventory") loadInventory();
-  if(tab==="sales") loadSales();
-  if(tab==="reminders") loadReminders();
-  if(tab==="udhaar"&&!currentKhataId){ document.getElementById("khata-placeholder").style.display="flex"; document.getElementById("khata-view").style.display="none"; }
-  // Close sidebar on mobile after navigation
-  if(window.innerWidth<768) closeSidebar();
+function goto(tab) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + tab).classList.add("active");
+  const tabs = ["dashboard","customers","udhaar","inventory","sales","reminders"];
+  document.querySelectorAll("#nav .nav-item").forEach((b,i) => b.classList.toggle("active", tabs[i]===tab));
+  const bnavTabs = ["dashboard","customers","udhaar","inventory","reminders"];
+  bnavTabs.forEach(t => { const el = document.getElementById("bnav-"+t); if(el) el.classList.toggle("active", t===tab); });
+  document.getElementById("top-bar-title").textContent = T[currentLang]?.["nav_"+tab] || tab.charAt(0).toUpperCase()+tab.slice(1);
+  if (tab==="dashboard") loadDashboard();
+  if (tab==="customers") loadCustomers();
+  if (tab==="inventory") loadInventory();
+  if (tab==="sales")     loadSales();
+  if (tab==="reminders") loadReminders();
+  if (tab==="udhaar" && !currentKhataId) { document.getElementById("khata-placeholder").style.display="flex"; document.getElementById("khata-view").style.display="none"; }
+  if (window.innerWidth < 768) closeSidebar();
 }
-function openModal(id){
+function openModal(id) {
   document.getElementById(id).classList.add("open");
-  if(id==="addCreditModal"){ setVal("cr-date",today()); hideErr("cr-err"); }
-  if(id==="addPaymentModal"){ setVal("pay-date",today()); setVal("pay-amount",""); hideErr("pay-err"); document.getElementById("pay-balance-info").textContent=`Pending balance: ${fmt(currentKhataBalance)}`; }
+  if (id==="addCreditModal")  { setVal("cr-date",today()); hideErr("cr-err"); }
+  if (id==="addPaymentModal") { setVal("pay-date",today()); setVal("pay-amount",""); hideErr("pay-err"); document.getElementById("pay-balance-info").textContent = `Pending balance: ${fmt(currentKhataBalance)}`; }
 }
-function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
-// ─── DASHBOARD ────────────────────────────────────────────────────────────────
-async function loadDashboard(){
-  try{
-    const d=await api("GET","/dashboard");
-    document.getElementById("d-total-credit").textContent=fmt(d.total_credit);
-    document.getElementById("d-collected").textContent=fmt(d.total_collected);
-    document.getElementById("d-pending").textContent=fmt(d.total_pending);
-    document.getElementById("d-today").textContent=fmt(d.today_sales);
-    document.getElementById("d-overdue-count").textContent=d.overdue_count+" customers overdue";
-    const bI=document.getElementById("badge-inventory"),bR=document.getElementById("badge-reminders");
-    const bnavI=document.getElementById("bnav-badge-inventory"),bnavR=document.getElementById("bnav-badge-reminders");
+// ══════════════════════════════════════════════════════════════
+// 📄 PDF DOWNLOAD — Browser-based, no library needed
+// ══════════════════════════════════════════════════════════════
+function downloadKhataPDF() {
+  if (!currentKhataData) { showToast("Pehle khata load karo","error"); return; }
+  const d = currentKhataData;
+  const rows = d.transactions.map(t =>
+    `<tr style="border-bottom:1px solid #eee">
+      <td style="padding:8px 10px">${t.date}</td>
+      <td style="padding:8px 10px"><span style="background:${t.type==='credit'?'#fff3e0':'#e8f5e9'};color:${t.type==='credit'?'#e65100':'#2e7d32'};padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700">${t.type.toUpperCase()}</span></td>
+      <td style="padding:8px 10px;font-weight:700;color:${t.type==='credit'?'#c62828':'#2e7d32'}">${t.type==='credit'?'+ ':'- '}₹${Number(t.amount).toLocaleString('en-IN')}</td>
+      <td style="padding:8px 10px;color:#666">${t.note || '—'}</td>
+      <td style="padding:8px 10px;font-weight:700">₹${Number(t.running_balance).toLocaleString('en-IN')}</td>
+    </tr>`
+  ).join("");
+
+  const balColor = d.balance > 0 ? "#c62828" : "#2e7d32";
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+  <style>
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a1a;margin:0;padding:0}
+    .header{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;padding:28px 32px;display:flex;justify-content:space-between;align-items:center}
+    .header h1{margin:0;font-size:22px} .header p{margin:4px 0 0;opacity:.85;font-size:13px}
+    .meta{padding:20px 32px;background:#f8f9ff;border-bottom:1px solid #e8e8f0;display:flex;justify-content:space-between}
+    .meta-item p{margin:0;font-size:12px;color:#666} .meta-item strong{font-size:15px;color:#1a1a1a}
+    .content{padding:24px 32px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    thead th{background:#f0f0f8;padding:10px;text-align:left;font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.5px}
+    .balance-box{margin-top:20px;padding:16px 20px;background:${d.balance>0?'#fff3f3':'#f3fff3'};border:2px solid ${balColor};border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .footer{margin-top:32px;padding:16px 32px;background:#f8f9ff;border-top:1px solid #e8e8f0;text-align:center;font-size:11px;color:#999}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style></head><body>
+  <div class="header">
+    <div><h1>📒 ${USER?.shop_name || 'Dukaan'}</h1><p>Khata Bill Receipt</p></div>
+    <div style="text-align:right"><p style="margin:0;opacity:.85;font-size:13px">Generated: ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</p><p style="margin:4px 0 0;opacity:.85;font-size:12px">KhataKitab</p></div>
+  </div>
+  <div class="meta">
+    <div class="meta-item"><p>Customer</p><strong>${d.name}</strong></div>
+    <div class="meta-item"><p>Phone</p><strong>${d.phone}</strong></div>
+    <div class="meta-item"><p>Address</p><strong>${d.address || '—'}</strong></div>
+    <div class="meta-item"><p>Total Transactions</p><strong>${d.transactions.length}</strong></div>
+  </div>
+  <div class="content">
+    <table>
+      <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th><th>Balance</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="5" style="padding:20px;text-align:center;color:#999">Koi transaction nahi</td></tr>'}</tbody>
+    </table>
+    <div class="balance-box">
+      <span style="font-weight:700;font-size:16px">${d.balance > 0 ? '💰 Baaki Balance' : '✅ Balance Clear'}</span>
+      <span style="font-size:26px;font-weight:800;color:${balColor}">₹${Math.abs(d.balance).toLocaleString('en-IN')}</span>
+    </div>
+    ${d.balance > 0 ? '<p style="color:#c62828;margin-top:12px;font-size:13px">Kripya jald settle karein. Dhanyavaad! 🙏</p>' : '<p style="color:#2e7d32;margin-top:12px;font-size:13px">Shukriya! Aapka khata bilkul clear hai. 🎉</p>'}
+  </div>
+  <div class="footer">— ${USER?.name || ''}, ${USER?.shop_name || ''} · Sent via KhataKitab · ${new Date().toLocaleDateString('en-IN')}</div>
+  </body></html>`;
+
+  const w = window.open('','_blank','width=850,height=700');
+  w.document.write(html);
+  w.document.close();
+  w.onload = () => { w.focus(); w.print(); };
+  showToast("📄 PDF ready! Print ya Save karein.");
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const d = await api("GET","/dashboard");
+    document.getElementById("d-total-credit").textContent = fmt(d.total_credit);
+    document.getElementById("d-collected").textContent = fmt(d.total_collected);
+    document.getElementById("d-pending").textContent = fmt(d.total_pending);
+    document.getElementById("d-today").textContent = fmt(d.today_sales);
+    document.getElementById("d-overdue-count").textContent = d.overdue_count + " customers overdue";
+    const bI=document.getElementById("badge-inventory"), bR=document.getElementById("badge-reminders");
+    const bnavI=document.getElementById("bnav-badge-inventory"), bnavR=document.getElementById("bnav-badge-reminders");
     bI.textContent=d.low_stock_count; bI.style.display=d.low_stock_count>0?"inline":"none";
-    bR.textContent=d.overdue_count; bR.style.display=d.overdue_count>0?"inline":"none";
-    if(bnavI){ bnavI.textContent=d.low_stock_count; bnavI.style.display=d.low_stock_count>0?"block":"none"; }
-    if(bnavR){ bnavR.textContent=d.overdue_count; bnavR.style.display=d.overdue_count>0?"block":"none"; }
+    bR.textContent=d.overdue_count;   bR.style.display=d.overdue_count>0?"inline":"none";
+    if(bnavI){bnavI.textContent=d.low_stock_count; bnavI.style.display=d.low_stock_count>0?"block":"none";}
+    if(bnavR){bnavR.textContent=d.overdue_count;   bnavR.style.display=d.overdue_count>0?"block":"none";}
     let alerts="";
     if(d.low_stock.length) alerts+=`<div class="alert-banner alert-orange"><p class="alert-title" style="color:var(--orange)">⚠️ Low Stock</p>${d.low_stock.map(p=>`<p class="alert-row">${p.name} — <strong>${p.quantity} ${p.unit}</strong> left</p>`).join("")}</div>`;
-    if(d.overdue.length) alerts+=`<div class="alert-banner alert-red"><p class="alert-title" style="color:var(--red)">🔔 Overdue</p>${d.overdue.slice(0,3).map(c=>`<p class="alert-row">${c.name} — <strong>${fmt(c.balance)}</strong> (${c.days_overdue}d)</p>`).join("")}</div>`;
-    document.getElementById("d-alerts").innerHTML=alerts;
-    if(weeklyChartInstance){weeklyChartInstance.destroy();weeklyChartInstance=null;}
-    weeklyChartInstance=new Chart(document.getElementById("weeklyChart").getContext("2d"),{
-      type:"bar",data:{labels:d.weekly_sales.map(w=>w.day),datasets:[
-        {label:"Cash",data:d.weekly_sales.map(w=>w.cash),backgroundColor:"#22c55e",borderRadius:4,barPercentage:0.65},
-        {label:"Credit",data:d.weekly_sales.map(w=>w.credit),backgroundColor:"#fb923c",borderRadius:4,barPercentage:0.65}
+    if(d.overdue.length)   alerts+=`<div class="alert-banner alert-red"><p class="alert-title" style="color:var(--red)">🔔 Overdue</p>${d.overdue.slice(0,3).map(c=>`<p class="alert-row">${c.name} — <strong>${fmt(c.balance)}</strong> (${c.days_overdue}d)</p>`).join("")}</div>`;
+    document.getElementById("d-alerts").innerHTML = alerts;
+    if (weeklyChartInstance) { weeklyChartInstance.destroy(); weeklyChartInstance=null; }
+    weeklyChartInstance = new Chart(document.getElementById("weeklyChart").getContext("2d"), {
+      type:"bar", data:{ labels:d.weekly_sales.map(w=>w.day), datasets:[
+        {label:"Cash",   data:d.weekly_sales.map(w=>w.cash),   backgroundColor:"#22c55e", borderRadius:4, barPercentage:0.65},
+        {label:"Credit", data:d.weekly_sales.map(w=>w.credit), backgroundColor:"#fb923c", borderRadius:4, barPercentage:0.65}
       ]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#6b7280",font:{family:"Plus Jakarta Sans",size:11}}}},
-        scales:{x:{ticks:{color:"#6b7280",font:{size:10}},grid:{display:false}},y:{beginAtZero:true,ticks:{color:"#6b7280",font:{size:10},callback:v=>"₹"+v},grid:{color:"#252835"}}}}
+      options:{responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:"#6b7280",font:{family:"Plus Jakarta Sans",size:11}}}},
+        scales:{x:{ticks:{color:"#6b7280",font:{size:10}},grid:{display:false}}, y:{beginAtZero:true,ticks:{color:"#6b7280",font:{size:10},callback:v=>"₹"+v},grid:{color:"#252835"}}}}
     });
-    const rem=await api("GET","/reminders");
-    document.getElementById("d-top-debtors").innerHTML=rem.length===0?`<p style="color:var(--muted);font-size:.85rem">Sab clear hai 🎉</p>`:rem.slice(0,5).map(c=>`<div class="debtor-row"><div style="display:flex;gap:.55rem;align-items:center"><div class="debtor-avatar">${c.name[0]}</div><span style="font-size:.88rem;font-weight:500">${c.name}</span></div><span style="font-weight:700;color:var(--red);font-size:.9rem">${fmt(c.balance)}</span></div>`).join("");
-    const tbody=document.getElementById("d-recent-table").querySelector("tbody");
-    tbody.innerHTML=rem.length===0?`<tr class="empty-row"><td colspan="5">Koi transaction nahi.</td></tr>`:rem.slice(0,8).map(r=>`<tr><td>${r.name}</td><td><span class="badge badge-credit">credit</span></td><td style="color:var(--red);font-weight:700">${fmt(r.balance)}</td><td style="color:var(--muted)">Baaki</td><td style="color:var(--muted)">${r.last_credit_date||"—"}</td></tr>`).join("");
-  }catch(e){console.error("Dashboard:",e);}
+    const rem = await api("GET","/reminders");
+    document.getElementById("d-top-debtors").innerHTML = rem.length===0
+      ? `<p style="color:var(--muted);font-size:.85rem">Sab clear hai 🎉</p>`
+      : rem.slice(0,5).map(c=>`<div class="debtor-row"><div style="display:flex;gap:.55rem;align-items:center"><div class="debtor-avatar">${c.name[0]}</div><span style="font-size:.88rem;font-weight:500">${c.name}</span></div><span style="font-weight:700;color:var(--red);font-size:.9rem">${fmt(c.balance)}</span></div>`).join("");
+    const tbody = document.getElementById("d-recent-table").querySelector("tbody");
+    tbody.innerHTML = rem.length===0
+      ? `<tr class="empty-row"><td colspan="5">Koi transaction nahi.</td></tr>`
+      : rem.slice(0,8).map(r=>`<tr><td>${r.name}</td><td><span class="badge badge-credit">credit</span></td><td style="color:var(--red);font-weight:700">${fmt(r.balance)}</td><td style="color:var(--muted)">Baaki</td><td style="color:var(--muted)">${r.last_credit_date||"—"}</td></tr>`).join("");
+  } catch(e) { console.error("Dashboard:", e); }
 }
 
-// ─── CUSTOMERS ────────────────────────────────────────────────────────────────
-async function loadCustomers(){allCustomers=await api("GET","/customers");renderCustomers();}
-function renderCustomers(){
-  const q=document.getElementById("cust-search").value.toLowerCase();
-  const f=allCustomers.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));
-  document.getElementById("cust-subtitle").textContent=allCustomers.length+" customers";
-  document.getElementById("cust-grid").innerHTML=f.map(c=>`
+// ── CUSTOMERS ─────────────────────────────────────────────────────────────────
+async function loadCustomers() { allCustomers = await api("GET","/customers"); renderCustomers(); }
+function renderCustomers() {
+  const q = document.getElementById("cust-search").value.toLowerCase();
+  const f = allCustomers.filter(c => c.name.toLowerCase().includes(q) || c.phone.includes(q));
+  document.getElementById("cust-subtitle").textContent = allCustomers.length + " customers";
+  document.getElementById("cust-grid").innerHTML = f.map(c=>`
     <div class="customer-card" onclick="openKhata(${c.id})">
       <div style="display:flex;gap:.75rem;align-items:center;margin-bottom:.75rem">
         <div class="cust-avatar">${c.name[0]}</div>
@@ -1125,56 +1034,64 @@ function renderCustomers(){
         <span style="font-size:.78rem;color:var(--muted)">${c.address||"—"}</span>
         <span style="font-weight:800;font-size:.95rem;color:${c.balance>0?"var(--red)":"var(--green)"}">${fmt(c.balance)}</span>
       </div>
-    </div>`).join("")||`<p style="color:var(--muted);margin-top:1rem">Koi customer nahi mila.</p>`;
+    </div>`).join("") || `<p style="color:var(--muted);margin-top:1rem">Koi customer nahi mila.</p>`;
 }
-async function addCustomer(){ hideErr("c-err"); try{await api("POST","/customers",{name:val("c-name"),phone:val("c-phone"),address:val("c-address")});closeModal("addCustomerModal");setVal("c-name","");setVal("c-phone","");setVal("c-address","");showToast("Customer add ho gaya!");loadCustomers();}catch(e){showErr("c-err",e.message);} }
+async function addCustomer() { hideErr("c-err"); try { await api("POST","/customers",{name:val("c-name"),phone:val("c-phone"),address:val("c-address")}); closeModal("addCustomerModal"); setVal("c-name",""); setVal("c-phone",""); setVal("c-address",""); showToast("Customer add ho gaya!"); loadCustomers(); } catch(e) { showErr("c-err",e.message); } }
 
-// ─── KHATA ────────────────────────────────────────────────────────────────────
-async function openKhata(id){
-  currentKhataId=id; goto("udhaar");
-  document.getElementById("khata-placeholder").style.display="none";
-  document.getElementById("khata-view").style.display="block";
-  const data=await api("GET","/customers/"+id);
-  currentKhataBalance=data.balance;
-  document.getElementById("khata-name").textContent=data.name+"'s Khata";
-  document.getElementById("khata-contact").textContent=`📱 ${data.phone}  ·  ${data.address}`;
-  document.getElementById("khata-balance").textContent=fmt(data.balance);
-  document.getElementById("khata-balance").style.color=data.balance>0?"var(--red)":"var(--green)";
-  document.getElementById("btn-payment").disabled=data.balance<=0;
-  const rows=data.transactions.map(t=>`<tr><td style="color:var(--muted)">${t.date}</td><td><span class="badge badge-${t.type}">${t.type}</span></td><td style="font-weight:700;color:${t.type==="credit"?"var(--red)":"var(--green)"}">${t.type==="credit"?"+ ":"- "}${fmt(t.amount)}</td><td style="color:var(--muted)">${t.note||"—"}</td><td style="font-weight:700">${fmt(t.running_balance)}</td></tr>`);
-  document.getElementById("khata-table").querySelector("tbody").innerHTML=rows.length?rows.join(""):`<tr class="empty-row"><td colspan="5">Koi transaction nahi.</td></tr>`;
-  document.getElementById("khata-total").textContent=fmt(data.balance);
-  document.getElementById("khata-total").style.color=data.balance>0?"var(--red)":"var(--green)";
+// ── KHATA ─────────────────────────────────────────────────────────────────────
+async function openKhata(id) {
+  currentKhataId = id; goto("udhaar");
+  document.getElementById("khata-placeholder").style.display = "none";
+  document.getElementById("khata-view").style.display = "block";
+  const data = await api("GET","/customers/"+id);
+  currentKhataData = data; // save for PDF
+  currentKhataBalance = data.balance;
+  document.getElementById("khata-name").textContent = data.name + "'s Khata";
+  document.getElementById("khata-contact").textContent = `📱 ${data.phone}  ·  ${data.address}`;
+  document.getElementById("khata-balance").textContent = fmt(data.balance);
+  document.getElementById("khata-balance").style.color = data.balance > 0 ? "var(--red)" : "var(--green)";
+  document.getElementById("btn-payment").disabled = data.balance <= 0;
+  const rows = data.transactions.map(t =>
+    `<tr><td style="color:var(--muted)">${t.date}</td><td><span class="badge badge-${t.type}">${t.type}</span></td><td style="font-weight:700;color:${t.type==="credit"?"var(--red)":"var(--green)"}">${t.type==="credit"?"+ ":"- "}${fmt(t.amount)}</td><td style="color:var(--muted)">${t.note||"—"}</td><td style="font-weight:700">${fmt(t.running_balance)}</td></tr>`
+  );
+  document.getElementById("khata-table").querySelector("tbody").innerHTML = rows.length ? rows.join("") : `<tr class="empty-row"><td colspan="5">Koi transaction nahi.</td></tr>`;
+  document.getElementById("khata-total").textContent = fmt(data.balance);
+  document.getElementById("khata-total").style.color = data.balance > 0 ? "var(--red)" : "var(--green)";
 }
-function closeKhata(){ currentKhataId=null; document.getElementById("khata-placeholder").style.display="flex"; document.getElementById("khata-view").style.display="none"; goto("customers"); }
-async function addTransaction(type){
-  const eid=type==="credit"?"cr-err":"pay-err"; hideErr(eid);
-  const amount=parseFloat(val(type==="credit"?"cr-amount":"pay-amount")),dt=safeDate(val(type==="credit"?"cr-date":"pay-date"));
-  if(!amount||amount<=0) return showErr(eid,"Amount enter karo");
-  try{await api("POST","/transactions",{customer_id:currentKhataId,amount,type,note:val(type==="credit"?"cr-note":"pay-note"),date:dt});closeModal(type==="credit"?"addCreditModal":"addPaymentModal");showToast(type==="credit"?"Udhaar add ho gaya!":"Payment record ho gayi!");openKhata(currentKhataId);}catch(e){showErr(eid,e.message);}
+function closeKhata() { currentKhataId=null; currentKhataData=null; document.getElementById("khata-placeholder").style.display="flex"; document.getElementById("khata-view").style.display="none"; goto("customers"); }
+async function addTransaction(type) {
+  const eid = type==="credit" ? "cr-err" : "pay-err"; hideErr(eid);
+  const amount = parseFloat(val(type==="credit"?"cr-amount":"pay-amount")), dt = safeDate(val(type==="credit"?"cr-date":"pay-date"));
+  if (!amount || amount <= 0) return showErr(eid, "Amount enter karo");
+  try { await api("POST","/transactions",{customer_id:currentKhataId,amount,type,note:val(type==="credit"?"cr-note":"pay-note"),date:dt}); closeModal(type==="credit"?"addCreditModal":"addPaymentModal"); showToast(type==="credit"?"Udhaar add ho gaya!":"Payment record ho gayi!"); openKhata(currentKhataId); } catch(e) { showErr(eid,e.message); }
 }
 
-// ─── INVENTORY ────────────────────────────────────────────────────────────────
-async function loadInventory(){
-  allProducts=await api("GET","/products");
-  const low=allProducts.filter(p=>p.quantity<=p.threshold).length;
-  document.getElementById("inv-subtitle").textContent=`${allProducts.length} products · ${low} low stock`;
-  document.getElementById("inv-table").querySelector("tbody").innerHTML=allProducts.map(p=>`<tr><td style="font-weight:600">${p.name}</td><td style="font-weight:700;color:var(--accent)">${fmt(p.price)}</td><td><strong>${p.quantity}</strong></td><td style="color:var(--muted)">${p.unit}</td><td><span class="badge badge-${p.status}">${p.status==="ok"?"In Stock":p.status==="low"?"Low":"Out"}</span></td><td><div class="inline-restock"><input type="number" id="rq-${p.id}" placeholder="Qty" min="1" inputmode="numeric"/><button class="btn-secondary btn-sm" onclick="restock(${p.id})">Add</button></div></td></tr>`).join("")||`<tr class="empty-row"><td colspan="6">Koi product nahi.</td></tr>`;
+// ── INVENTORY ─────────────────────────────────────────────────────────────────
+async function loadInventory() {
+  allProducts = await api("GET","/products");
+  const low = allProducts.filter(p => p.quantity <= p.threshold).length;
+  document.getElementById("inv-subtitle").textContent = `${allProducts.length} products · ${low} low stock`;
+  document.getElementById("inv-table").querySelector("tbody").innerHTML = allProducts.map(p=>
+    `<tr><td style="font-weight:600">${p.name}</td><td style="font-weight:700;color:var(--accent)">${fmt(p.price)}</td><td><strong>${p.quantity}</strong></td><td style="color:var(--muted)">${p.unit}</td><td><span class="badge badge-${p.status}">${p.status==="ok"?"In Stock":p.status==="low"?"Low":"Out"}</span></td><td><div class="inline-restock"><input type="number" id="rq-${p.id}" placeholder="Qty" min="1" inputmode="numeric"/><button class="btn-secondary btn-sm" onclick="restock(${p.id})">Add</button></div></td></tr>`
+  ).join("") || `<tr class="empty-row"><td colspan="6">Koi product nahi.</td></tr>`;
 }
-async function addProduct(){ hideErr("p-err"); const name=val("p-name"),price=parseFloat(val("p-price")),quantity=parseInt(val("p-qty")); if(!name||!price||!quantity) return showErr("p-err","Sab fields bharo"); try{await api("POST","/products",{name,price,quantity,unit:val("p-unit"),threshold:parseInt(val("p-threshold"))||5});closeModal("addProductModal");setVal("p-name","");setVal("p-price","");setVal("p-qty","");showToast("Product add ho gaya!");loadInventory();}catch(e){showErr("p-err",e.message);} }
-async function restock(id){ const qty=parseInt(document.getElementById("rq-"+id).value); if(!qty||qty<=0) return showToast("Valid quantity enter karo","error"); try{await api("PATCH","/products/"+id+"/restock",{quantity:qty});showToast("Restock ho gaya!");loadInventory();}catch(e){showToast(e.message,"error");} }
+async function addProduct() { hideErr("p-err"); const name=val("p-name"),price=parseFloat(val("p-price")),quantity=parseInt(val("p-qty")); if(!name||!price||!quantity) return showErr("p-err","Sab fields bharo"); try { await api("POST","/products",{name,price,quantity,unit:val("p-unit"),threshold:parseInt(val("p-threshold"))||5}); closeModal("addProductModal"); setVal("p-name",""); setVal("p-price",""); setVal("p-qty",""); showToast("Product add ho gaya!"); loadInventory(); } catch(e) { showErr("p-err",e.message); } }
+async function restock(id) { const qty=parseInt(document.getElementById("rq-"+id).value); if(!qty||qty<=0) return showToast("Valid quantity enter karo","error"); try { await api("PATCH","/products/"+id+"/restock",{quantity:qty}); showToast("Restock ho gaya!"); loadInventory(); } catch(e) { showToast(e.message,"error"); } }
 
-// ─── SALES ────────────────────────────────────────────────────────────────────
-async function loadSales(){
-  const [sales,prods,custs]=await Promise.all([api("GET","/sales"),api("GET","/products"),api("GET","/customers")]);
-  const todayT=sales.filter(s=>s.date===today()).reduce((a,s)=>a+s.amount,0);
-  document.getElementById("sales-subtitle").textContent=`Aaj: ${fmt(todayT)} · Total: ${fmt(sales.reduce((a,s)=>a+s.amount,0))}`;
-  document.getElementById("sales-table").querySelector("tbody").innerHTML=sales.map(s=>{const p=prods.find(x=>x.id===s.product_id),c=custs.find(x=>x.id===s.customer_id);return `<tr><td style="color:var(--muted)">${s.date}</td><td style="font-weight:500">${p?.name||"—"}</td><td>${s.quantity} ${p?.unit||""}</td><td style="font-weight:700">${fmt(s.amount)}</td><td><span class="badge badge-${s.type}">${s.type}</span></td><td style="color:var(--muted)">${c?.name||"—"}</td></tr>`;}).join("")||`<tr class="empty-row"><td colspan="6">Koi sale nahi.</td></tr>`;
+// ── SALES ─────────────────────────────────────────────────────────────────────
+async function loadSales() {
+  const [sales,prods,custs] = await Promise.all([api("GET","/sales"),api("GET","/products"),api("GET","/customers")]);
+  const todayT = sales.filter(s=>s.date===today()).reduce((a,s)=>a+s.amount,0);
+  document.getElementById("sales-subtitle").textContent = `Aaj: ${fmt(todayT)} · Total: ${fmt(sales.reduce((a,s)=>a+s.amount,0))}`;
+  document.getElementById("sales-table").querySelector("tbody").innerHTML = sales.map(s=>{
+    const p=prods.find(x=>x.id===s.product_id), c=custs.find(x=>x.id===s.customer_id);
+    return `<tr><td style="color:var(--muted)">${s.date}</td><td style="font-weight:500">${p?.name||"—"}</td><td>${s.quantity} ${p?.unit||""}</td><td style="font-weight:700">${fmt(s.amount)}</td><td><span class="badge badge-${s.type}">${s.type}</span></td><td style="color:var(--muted)">${c?.name||"—"}</td></tr>`;
+  }).join("") || `<tr class="empty-row"><td colspan="6">Koi sale nahi.</td></tr>`;
 }
-function setSaleMode(mode){saleMode=mode;document.getElementById("sale-single").style.display=mode==="single"?"block":"none";document.getElementById("sale-cart").style.display=mode==="cart"?"block":"none";document.getElementById("tab-single").classList.toggle("active",mode==="single");document.getElementById("tab-cart").classList.toggle("active",mode==="cart");}
-function setSaleType(type){saleType=type;document.querySelectorAll("#sale-single .type-btn").forEach((b,i)=>b.classList.toggle("active",(i===0&&type==="cash")||(i===1&&type==="credit")));document.getElementById("s-cust-field").style.display=type==="credit"?"block":"none";}
-function calcSaleAmount(){const pid=parseInt(document.getElementById("s-product").value),qty=parseInt(document.getElementById("s-qty").value)||0,p=allProducts.find(x=>x.id===pid);document.getElementById("s-amount").value=p?fmt(p.price*qty):"—";}
-async function openSaleModal(){
+function setSaleMode(mode) { saleMode=mode; document.getElementById("sale-single").style.display=mode==="single"?"block":"none"; document.getElementById("sale-cart").style.display=mode==="cart"?"block":"none"; document.getElementById("tab-single").classList.toggle("active",mode==="single"); document.getElementById("tab-cart").classList.toggle("active",mode==="cart"); }
+function setSaleType(type) { saleType=type; document.querySelectorAll("#sale-single .type-btn").forEach((b,i)=>b.classList.toggle("active",(i===0&&type==="cash")||(i===1&&type==="credit"))); document.getElementById("s-cust-field").style.display=type==="credit"?"block":"none"; }
+function calcSaleAmount() { const pid=parseInt(document.getElementById("s-product").value),qty=parseInt(document.getElementById("s-qty").value)||0,p=allProducts.find(x=>x.id===pid); document.getElementById("s-amount").value=p?fmt(p.price*qty):"—"; }
+async function openSaleModal() {
   await loadInventory(); const custs=await api("GET","/customers"); allCustomers=custs;
   const pO=`<option value="">Select...</option>`+allProducts.filter(p=>p.quantity>0).map(p=>`<option value="${p.id}">${p.name} (${p.quantity} ${p.unit})</option>`).join("");
   const cO=`<option value="">Select...</option>`+custs.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
@@ -1184,21 +1101,21 @@ async function openSaleModal(){
   setSaleType("cash"); setCartType("cash"); setSaleMode("single"); cart=[]; renderCart(); hideErr("s-err"); hideErr("cart-err"); hideErr("cart-add-err");
   openModal("saleModal");
 }
-async function recordSale(){ hideErr("s-err"); const pid=parseInt(val("s-product")),qty=parseInt(val("s-qty")),dt=safeDate(val("s-date")); if(!pid||!qty) return showErr("s-err","Product aur quantity select karo"); if(saleType==="credit"&&!val("s-customer")) return showErr("s-err","Credit ke liye customer select karo"); try{await api("POST","/sales",{product_id:pid,quantity:qty,type:saleType,customer_id:saleType==="credit"?parseInt(val("s-customer")):null,date:dt});closeModal("saleModal");showToast("Sale record ho gayi!");loadSales();}catch(e){showErr("s-err",e.message);} }
-function setCartType(type){cartType=type;document.querySelectorAll("#sale-cart .type-btn").forEach((b,i)=>b.classList.toggle("active",(i===0&&type==="cash")||(i===1&&type==="credit")));document.getElementById("cart-cust-field").style.display=type==="credit"?"block":"none";}
-function cartCalcAmount(){const pid=parseInt(document.getElementById("cart-product").value),qty=parseInt(document.getElementById("cart-qty").value)||0,p=allProducts.find(x=>x.id===pid);document.getElementById("cart-item-amt").value=p?fmt(p.price*qty):"—";}
-function addToCart(){ hideErr("cart-add-err"); const pid=parseInt(document.getElementById("cart-product").value),qty=parseInt(document.getElementById("cart-qty").value)||0,p=allProducts.find(x=>x.id===pid); if(!pid||!p) return showErr("cart-add-err","Product select karo"); if(!qty||qty<=0) return showErr("cart-add-err","Valid quantity enter karo"); const inC=cart.filter(i=>i.product.id===pid).reduce((s,i)=>s+i.quantity,0); if(inC+qty>p.quantity) return showErr("cart-add-err",`Only ${p.quantity} ${p.unit} in stock`); cart.push({product:p,quantity:qty,amount:p.price*qty}); setVal("cart-product",""); setVal("cart-qty","1"); setVal("cart-item-amt",""); renderCart(); }
-function removeFromCart(i){cart.splice(i,1);renderCart();}
-function renderCart(){ const e=cart.length===0; document.getElementById("cart-empty").style.display=e?"block":"none"; document.getElementById("cart-table").style.display=e?"none":"table"; document.getElementById("cart-total-row").style.display=e?"none":"flex"; if(!e){document.getElementById("cart-tbody").innerHTML=cart.map((item,i)=>`<tr><td style="font-weight:500">${item.product.name}</td><td>${item.quantity} ${item.product.unit}</td><td style="color:var(--muted)">${fmt(item.product.price)}</td><td style="font-weight:700">${fmt(item.amount)}</td><td><button style="background:var(--red);color:#fff;border:none;border-radius:.4rem;padding:.18rem .4rem;cursor:pointer;font-size:.72rem" onclick="removeFromCart(${i})">✕</button></td></tr>`).join(""); document.getElementById("cart-total-amt").textContent=fmt(cart.reduce((s,i)=>s+i.amount,0));} }
-async function recordCartSale(){ hideErr("cart-err"); if(!cart.length) return showErr("cart-err","Cart mein kuch jodo pehle"); if(cartType==="credit"&&!val("cart-customer")) return showErr("cart-err","Credit ke liye customer select karo"); const dt=safeDate(val("cart-date")),cid=cartType==="credit"?parseInt(val("cart-customer")):null; try{for(const item of cart) await api("POST","/sales",{product_id:item.product.id,quantity:item.quantity,type:cartType,customer_id:cid,date:dt}); closeModal("saleModal"); showToast(`✅ ${cart.length} items! ${fmt(cart.reduce((s,i)=>s+i.amount,0))}`); cart=[]; loadSales();}catch(e){showErr("cart-err",e.message);} }
+async function recordSale() { hideErr("s-err"); const pid=parseInt(val("s-product")),qty=parseInt(val("s-qty")),dt=safeDate(val("s-date")); if(!pid||!qty) return showErr("s-err","Product aur quantity select karo"); if(saleType==="credit"&&!val("s-customer")) return showErr("s-err","Credit ke liye customer select karo"); try { await api("POST","/sales",{product_id:pid,quantity:qty,type:saleType,customer_id:saleType==="credit"?parseInt(val("s-customer")):null,date:dt}); closeModal("saleModal"); showToast("Sale record ho gayi!"); loadSales(); } catch(e) { showErr("s-err",e.message); } }
+function setCartType(type) { cartType=type; document.querySelectorAll("#sale-cart .type-btn").forEach((b,i)=>b.classList.toggle("active",(i===0&&type==="cash")||(i===1&&type==="credit"))); document.getElementById("cart-cust-field").style.display=type==="credit"?"block":"none"; }
+function cartCalcAmount() { const pid=parseInt(document.getElementById("cart-product").value),qty=parseInt(document.getElementById("cart-qty").value)||0,p=allProducts.find(x=>x.id===pid); document.getElementById("cart-item-amt").value=p?fmt(p.price*qty):"—"; }
+function addToCart() { hideErr("cart-add-err"); const pid=parseInt(document.getElementById("cart-product").value),qty=parseInt(document.getElementById("cart-qty").value)||0,p=allProducts.find(x=>x.id===pid); if(!pid||!p) return showErr("cart-add-err","Product select karo"); if(!qty||qty<=0) return showErr("cart-add-err","Valid quantity enter karo"); const inC=cart.filter(i=>i.product.id===pid).reduce((s,i)=>s+i.quantity,0); if(inC+qty>p.quantity) return showErr("cart-add-err",`Only ${p.quantity} ${p.unit} in stock`); cart.push({product:p,quantity:qty,amount:p.price*qty}); setVal("cart-product",""); setVal("cart-qty","1"); setVal("cart-item-amt",""); renderCart(); }
+function removeFromCart(i) { cart.splice(i,1); renderCart(); }
+function renderCart() { const e=cart.length===0; document.getElementById("cart-empty").style.display=e?"block":"none"; document.getElementById("cart-table").style.display=e?"none":"table"; document.getElementById("cart-total-row").style.display=e?"none":"flex"; if(!e){document.getElementById("cart-tbody").innerHTML=cart.map((item,i)=>`<tr><td style="font-weight:500">${item.product.name}</td><td>${item.quantity} ${item.product.unit}</td><td style="color:var(--muted)">${fmt(item.product.price)}</td><td style="font-weight:700">${fmt(item.amount)}</td><td><button style="background:var(--red);color:#fff;border:none;border-radius:.4rem;padding:.18rem .4rem;cursor:pointer;font-size:.72rem" onclick="removeFromCart(${i})">✕</button></td></tr>`).join(""); document.getElementById("cart-total-amt").textContent=fmt(cart.reduce((s,i)=>s+i.amount,0));} }
+async function recordCartSale() { hideErr("cart-err"); if(!cart.length) return showErr("cart-err","Cart mein kuch jodo pehle"); if(cartType==="credit"&&!val("cart-customer")) return showErr("cart-err","Credit ke liye customer select karo"); const dt=safeDate(val("cart-date")),cid=cartType==="credit"?parseInt(val("cart-customer")):null; try { for(const item of cart) await api("POST","/sales",{product_id:item.product.id,quantity:item.quantity,type:cartType,customer_id:cid,date:dt}); closeModal("saleModal"); showToast(`✅ ${cart.length} items! ${fmt(cart.reduce((s,i)=>s+i.amount,0))}`); cart=[]; loadSales(); } catch(e) { showErr("cart-err",e.message); } }
 
-// ─── REMINDERS ────────────────────────────────────────────────────────────────
-async function loadReminders(){
-  const rem=await api("GET","/reminders");
-  document.getElementById("rem-subtitle").textContent=rem.length+" customers ka payment baaki";
-  if(!rem.length){document.getElementById("rem-list").innerHTML=`<div class="card" style="padding:2.5rem;text-align:center"><p style="font-size:2.5rem">🎉</p><p style="font-weight:700;font-size:1.05rem;margin-top:.5rem">Sab clear!</p><p style="color:var(--muted)">Koi baaki payment nahi.</p></div>`;return;}
-  const uc=d=>d>30?"var(--red)":d>=10?"var(--orange)":"var(--green)";
-  document.getElementById("rem-list").innerHTML=rem.map(c=>{
+// ── REMINDERS ─────────────────────────────────────────────────────────────────
+async function loadReminders() {
+  const rem = await api("GET","/reminders");
+  document.getElementById("rem-subtitle").textContent = rem.length + " customers ka payment baaki";
+  if (!rem.length) { document.getElementById("rem-list").innerHTML=`<div class="card" style="padding:2.5rem;text-align:center"><p style="font-size:2.5rem">🎉</p><p style="font-weight:700;font-size:1.05rem;margin-top:.5rem">Sab clear!</p><p style="color:var(--muted)">Koi baaki payment nahi.</p></div>`; return; }
+  const uc = d => d>30?"var(--red)":d>=10?"var(--orange)":"var(--green)";
+  document.getElementById("rem-list").innerHTML = rem.map(c => {
     const waMsg=encodeURIComponent(`Namaste ${c.name} ji 🙏\nAapka ${fmt(c.balance)} ka hisaab ${USER?.shop_name||"hamare dukaan"} mein baaki hai.\nKripya jald settle karein 🙏\n— ${USER?.name||""} (${USER?.phone||""})`);
     const waNum=c.phone.replace(/\D/g,"").slice(-10);
     return `<div class="reminder-row ${c.urgency}">
@@ -1222,13 +1139,13 @@ async function loadReminders(){
     </div>`;
   }).join("");
 }
-function speakReminder(name,balance,days){ speak(`${name} ka ${balance} rupaye ka udhaar ${days} din se baaki hai.`); }
-function openQuickPay(id,name,bal){ quickPayCustomerId=id; document.getElementById("qp-title").textContent=`Payment — ${name}`; document.getElementById("qp-info").textContent=`Baaki: ${fmt(bal)}`; document.getElementById("qp-amount").dataset.max=bal; setVal("qp-amount",""); hideErr("qp-err"); openModal("quickPayModal"); }
-async function quickPay(){ hideErr("qp-err"); const amt=parseFloat(val("qp-amount")),max=parseFloat(document.getElementById("qp-amount").dataset.max||99999); if(!amt||amt<=0) return showErr("qp-err","Valid amount enter karo"); if(amt>max) return showErr("qp-err",`Max: ${fmt(max)}`); try{await api("POST","/transactions",{customer_id:quickPayCustomerId,amount:amt,type:"payment",note:"Reminder se payment",date:today()});closeModal("quickPayModal");showToast("Payment record ho gayi!");loadReminders();}catch(e){showErr("qp-err",e.message);} }
+function speakReminder(name,balance,days) { speak(`${name} ka ${balance} rupaye ka udhaar ${days} din se baaki hai.`); }
+function openQuickPay(id,name,bal) { quickPayCustomerId=id; document.getElementById("qp-title").textContent=`Payment — ${name}`; document.getElementById("qp-info").textContent=`Baaki: ${fmt(bal)}`; document.getElementById("qp-amount").dataset.max=bal; setVal("qp-amount",""); hideErr("qp-err"); openModal("quickPayModal"); }
+async function quickPay() { hideErr("qp-err"); const amt=parseFloat(val("qp-amount")),max=parseFloat(document.getElementById("qp-amount").dataset.max||99999); if(!amt||amt<=0) return showErr("qp-err","Valid amount enter karo"); if(amt>max) return showErr("qp-err",`Max: ${fmt(max)}`); try { await api("POST","/transactions",{customer_id:quickPayCustomerId,amount:amt,type:"payment",note:"Reminder se payment",date:today()}); closeModal("quickPayModal"); showToast("Payment record ho gayi!"); loadReminders(); } catch(e) { showErr("qp-err",e.message); } }
 
-// ─── VOICE ENTRY ──────────────────────────────────────────────────────────────
-function toggleVoice(){ if(voiceListening){stopVoice();return;} startVoice(); }
-function startVoice(){
+// ── VOICE ENTRY ───────────────────────────────────────────────────────────────
+function toggleVoice() { if(voiceListening){stopVoice();return;} startVoice(); }
+function startVoice() {
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){showToast("Voice not supported. Use Chrome.","error");return;}
   speechRecognition=new SR(); speechRecognition.continuous=false; speechRecognition.interimResults=false; speechRecognition.lang=currentLang==="en"?"en-IN":"hi-IN";
@@ -1239,8 +1156,8 @@ function startVoice(){
   speechRecognition.onend=()=>{ voiceListening=false; document.getElementById("voice-fab").classList.remove("listening"); };
   speechRecognition.start();
 }
-function stopVoice(){ voiceListening=false; speechRecognition?.stop(); document.getElementById("voice-fab").classList.remove("listening"); document.getElementById("voice-tooltip").classList.remove("show"); }
-function parseVoiceCommand(text){
+function stopVoice() { voiceListening=false; speechRecognition?.stop(); document.getElementById("voice-fab").classList.remove("listening"); document.getElementById("voice-tooltip").classList.remove("show"); }
+function parseVoiceCommand(text) {
   text=text.toLowerCase().trim();
   let amount=null;
   const am=text.match(/(\d+[\d,]*)\s*(rupay|rupaye|rupee|rupees|rs|₹)?/i);
@@ -1249,33 +1166,26 @@ function parseVoiceCommand(text){
   if(["diya","diye","payment","wapas","mila","aaya","clear","chukaya","pay"].some(w=>text.includes(w))) type="payment";
   let customerName=null, customerId=null;
   const words=text.split(/\s+/);
-  for(let len=3;len>=1;len--){
-    for(let i=0;i<=words.length-len;i++){
-      const phrase=words.slice(i,i+len).join(" ");
-      const match=allCustomers.find(c=>c.name.toLowerCase().includes(phrase)||phrase.includes(c.name.toLowerCase().split(" ")[0]));
-      if(match&&match.name.toLowerCase().split(" ")[0].length>2){customerName=match.name;customerId=match.id;break;}
-    }
-    if(customerName) break;
-  }
+  for(let len=3;len>=1;len--){for(let i=0;i<=words.length-len;i++){const phrase=words.slice(i,i+len).join(" ");const match=allCustomers.find(c=>c.name.toLowerCase().includes(phrase)||phrase.includes(c.name.toLowerCase().split(" ")[0]));if(match&&match.name.toLowerCase().split(" ")[0].length>2){customerName=match.name;customerId=match.id;break;}}if(customerName)break;}
   let productName=null,productId=null,quantity=null;
-  for(const p of allProducts){ if(text.includes(p.name.toLowerCase())){productName=p.name;productId=p.id;const qm=text.match(/(\d+)\s*(kilo|kg|litre|liter|pkt|piece)?/i);if(qm)quantity=parseInt(qm[1]);break;} }
+  for(const p of allProducts){if(text.includes(p.name.toLowerCase())){productName=p.name;productId=p.id;const qm=text.match(/(\d+)\s*(kilo|kg|litre|liter|pkt|piece)?/i);if(qm)quantity=parseInt(qm[1]);break;}}
   let action=productId&&quantity?"sale_entry":type==="payment"?"payment_entry":"udhaar_entry";
   return {transcript:text,action,type,customerName,customerId,amount,productName,productId,quantity};
 }
-function processVoiceEntry(transcript){
+function processVoiceEntry(transcript) {
   stopVoice(); document.getElementById("voice-tooltip").classList.remove("show");
   const parsed=parseVoiceCommand(transcript); voiceParsed=parsed;
   document.getElementById("voice-transcript-text").textContent='"'+transcript+'"';
   const fields=document.getElementById("voice-parsed-fields"); fields.innerHTML=""; hideErr("voice-err");
-  const addField=(label,value,ok=false)=>{ const row=document.createElement("div"); row.className="voice-field"; row.innerHTML=`<span>${label}</span><span style="color:${ok?"var(--green)":"var(--text)"}">${value}</span>`; fields.appendChild(row); };
+  const addField=(label,value,ok=false)=>{const row=document.createElement("div");row.className="voice-field";row.innerHTML=`<span>${label}</span><span style="color:${ok?"var(--green)":"var(--text)"}">${value}</span>`;fields.appendChild(row);};
   if(parsed.action==="sale_entry"){addField("Action","🛒 Sale Entry",true);addField("Product",parsed.productName||"❓",!!parsed.productId);addField("Qty",parsed.quantity||"❓",!!parsed.quantity);}
   else{addField("Type",parsed.type==="credit"?"💳 Udhaar":"💚 Payment",true);addField("Customer",parsed.customerName||"❓ Identify nahi hua",!!parsed.customerName);addField("Amount",parsed.amount?fmt(parsed.amount):"❓ Amount nahi mila",!!parsed.amount);}
   document.getElementById("voice-result-panel").classList.add("show");
   if(parsed.customerName&&parsed.amount) speak(`${parsed.customerName} ka ${parsed.amount} rupaye ${parsed.type==="credit"?"udhaar":"payment"} entry banao?`);
 }
-async function confirmVoiceEntry(){
+async function confirmVoiceEntry() {
   hideErr("voice-err"); if(!voiceParsed) return; const p=voiceParsed;
-  try{
+  try {
     if(p.action==="udhaar_entry"||p.action==="payment_entry"){
       if(!p.customerId) return showErr("voice-err","Customer nahi mila.");
       if(!p.amount) return showErr("voice-err","Amount samajh nahi aaya.");
@@ -1285,48 +1195,93 @@ async function confirmVoiceEntry(){
     } else if(p.action==="sale_entry"){
       if(!p.productId||!p.quantity) return showErr("voice-err","Product ya quantity samajh nahi aaya.");
       await api("POST","/sales",{product_id:p.productId,quantity:p.quantity,type:"cash",date:today()});
-      const prd=allProducts.find(x=>x.id===p.productId);
       speak(`${p.productName} ${p.quantity} bika.`); showToast(`✅ ${p.productName} x${p.quantity} sold!`); closeVoicePanel(); loadInventory();
     }
-  }catch(e){showErr("voice-err",e.message);}
+  } catch(e) { showErr("voice-err",e.message); }
 }
-function retryVoice(){ closeVoicePanel(); setTimeout(startVoice,300); }
-function closeVoicePanel(){ document.getElementById("voice-result-panel").classList.remove("show"); voiceParsed=null; }
+function retryVoice() { closeVoicePanel(); setTimeout(startVoice,300); }
+function closeVoicePanel() { document.getElementById("voice-result-panel").classList.remove("show"); voiceParsed=null; }
 
-// ─── AI ───────────────────────────────────────────────────────────────────────
-function saveApiKey(){ const key=val("ai-api-key"); if(!key.startsWith("sk-ant-")) return showToast("Invalid key","error"); CLAUDE_KEY=key; localStorage.setItem("claude_api_key",key); document.getElementById("ai-key-section").style.display="none"; showToast("✅ Claude API connected!"); addAiMessage("ai","🎉 HisabKitab AI ready hai!"); }
-function toggleAI(){ aiOpen=!aiOpen; document.getElementById("ai-panel").classList.toggle("open",aiOpen); document.getElementById("ai-notif").style.display="none"; if(aiOpen) document.getElementById("ai-input").focus(); }
-function toggleAiSpeak(){ aiSpeakEnabled=!aiSpeakEnabled; document.getElementById("ai-speak-btn").classList.toggle("speaking",aiSpeakEnabled); if(!aiSpeakEnabled) speechSynthesis?.cancel(); }
-function toggleAiMic(){ if(aiMicListening){stopAiMic();return;} const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){showToast("Voice not supported.","error");return;} const r=new SR(); r.lang=currentLang==="en"?"en-IN":"hi-IN"; r.onresult=e=>{document.getElementById("ai-input").value=e.results[0][0].transcript;stopAiMic();sendAiMessage();}; r.onerror=()=>stopAiMic(); r.onend=()=>stopAiMic(); r.start(); aiMicListening=true; document.getElementById("ai-mic-btn").classList.add("active"); }
-function stopAiMic(){ aiMicListening=false; document.getElementById("ai-mic-btn").classList.remove("active"); }
-async function getShopContext(){ try{ const [d,c,p,s,r]=await Promise.all([api("GET","/dashboard"),api("GET","/customers"),api("GET","/products"),api("GET","/sales"),api("GET","/reminders")]); return {shop_name:USER?.shop_name||"My Dukaan",owner:USER?.name||"Owner",owner_phone:USER?.phone||"",today:today(),language:currentLang,summary:{total_credit:d.total_credit,total_collected:d.total_collected,total_pending:d.total_pending,today_sales:d.today_sales,overdue_count:d.overdue_count,low_stock_count:d.low_stock_count},customers:c.map(x=>({id:x.id,name:x.name,phone:x.phone,balance:x.balance})),products:p.map(x=>({id:x.id,name:x.name,price:x.price,quantity:x.quantity,unit:x.unit,threshold:x.threshold,status:x.status})),recent_sales:s.slice(0,20),overdue_reminders:r,low_stock:d.low_stock,weekly_sales:d.weekly_sales}; }catch(e){return {error:"Could not load"};} }
-function addAiMessage(role,text){ const c=document.getElementById("ai-messages"); const d=document.createElement("div"); d.className=`ai-msg ${role}`; const av=document.createElement("div"); av.className="ai-msg-avatar"; av.textContent=role==="ai"?"🤖":"👤"; const b=document.createElement("div"); b.className="ai-msg-bubble"; b.innerHTML=text.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n- /g,"<br>• ").replace(/\n\d+\./g,m=>"<br>"+m.trim()).replace(/\n/g,"<br>"); d.appendChild(av); d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight; if(role==="ai"&&aiSpeakEnabled) speakAiResponse(text); }
-function showTyping(){ const c=document.getElementById("ai-messages"); const d=document.createElement("div"); d.className="ai-msg ai"; d.id="ai-typing-indicator"; d.innerHTML=`<div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
-function hideTyping(){ const t=document.getElementById("ai-typing-indicator"); if(t) t.remove(); }
-async function callClaude(msg,ctx){ if(!CLAUDE_KEY) throw new Error("API key nahi hai."); const li=ctx.language==="hi"?"Respond in Hindi (Devanagari).":ctx.language==="en"?"Respond in English.":"Respond in Hinglish."; const sys=`You are HisabKitab AI for ${ctx.shop_name} (owner: ${ctx.owner}, WhatsApp: ${ctx.owner_phone}). Today: ${ctx.today}. ${li}\nLIVE DATA: ${JSON.stringify(ctx,null,2)}\nBe concise, warm, practical. Use ₹.`; const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":CLAUDE_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,system:sys,messages:[...aiMessages.slice(-6),{role:"user",content:msg}]})}); if(!r.ok){const e=await r.json();throw new Error(e.error?.message||"Claude API error");} return (await r.json()).content[0].text; }
-async function sendAiMessage(){ if(aiLoading) return; const inp=document.getElementById("ai-input"),message=inp.value.trim(); if(!message) return; inp.value=""; inp.style.height="auto"; addAiMessage("user",message); aiMessages.push({role:"user",content:message}); await runAi(message); }
-async function runAi(message){ aiLoading=true; document.getElementById("ai-send-btn").disabled=true; showTyping(); try{ if(!CLAUDE_KEY){hideTyping();addAiMessage("ai","⚠️ Claude API key enter karo.");aiLoading=false;document.getElementById("ai-send-btn").disabled=false;return;} const ctx=await getShopContext(); const reply=await callClaude(message,ctx); hideTyping(); addAiMessage("ai",reply); aiMessages.push({role:"assistant",content:reply}); }catch(e){hideTyping();addAiMessage("ai","❌ Error: "+e.message);} aiLoading=false; document.getElementById("ai-send-btn").disabled=false; }
-const quickPrompts={ summary:"Aaj ka complete business summary do — sales, udhaar, collections, urgent items.", overdue:"Sabhi overdue customers list do. 10+ din urgent mark karo.", restock:"Inventory analyze karo. Urgently restock karne wale products batao.", whatsapp:"Har pending customer ke liye WhatsApp reminder messages likho. Warm Hinglish, mere number aur shop name dalo.", topdebt:"Top 5 customers by outstanding balance — recommend karo pehle kisko follow up karoon." };
-async function aiQuick(type){ if(!aiOpen) toggleAI(); await new Promise(r=>setTimeout(r,100)); const msg=quickPrompts[type]; addAiMessage("user",msg); aiMessages.push({role:"user",content:msg}); await runAi(msg); }
+// ── AI — GEMINI (FREE, NO USER KEY) ──────────────────────────────────────────
+function toggleAI() { aiOpen=!aiOpen; document.getElementById("ai-panel").classList.toggle("open",aiOpen); document.getElementById("ai-notif").style.display="none"; if(aiOpen) document.getElementById("ai-input").focus(); }
+function toggleAiSpeak() { aiSpeakEnabled=!aiSpeakEnabled; document.getElementById("ai-speak-btn").classList.toggle("speaking",aiSpeakEnabled); if(!aiSpeakEnabled) speechSynthesis?.cancel(); }
+function toggleAiMic() { if(aiMicListening){stopAiMic();return;} const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){showToast("Voice not supported.","error");return;} const r=new SR(); r.lang=currentLang==="en"?"en-IN":"hi-IN"; r.onresult=e=>{document.getElementById("ai-input").value=e.results[0][0].transcript;stopAiMic();sendAiMessage();}; r.onerror=()=>stopAiMic(); r.onend=()=>stopAiMic(); r.start(); aiMicListening=true; document.getElementById("ai-mic-btn").classList.add("active"); }
+function stopAiMic() { aiMicListening=false; document.getElementById("ai-mic-btn").classList.remove("active"); }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
-document.getElementById("btn-open-sale").addEventListener("click",openSaleModal);
+async function getShopContext() {
+  try {
+    const [d,c,p,s,r] = await Promise.all([api("GET","/dashboard"),api("GET","/customers"),api("GET","/products"),api("GET","/sales"),api("GET","/reminders")]);
+    return {shop_name:USER?.shop_name||"My Dukaan",owner:USER?.name||"Owner",owner_phone:USER?.phone||"",today:today(),language:currentLang,
+      summary:{total_credit:d.total_credit,total_collected:d.total_collected,total_pending:d.total_pending,today_sales:d.today_sales,overdue_count:d.overdue_count,low_stock_count:d.low_stock_count},
+      customers:c.map(x=>({id:x.id,name:x.name,phone:x.phone,balance:x.balance})),
+      products:p.map(x=>({id:x.id,name:x.name,price:x.price,quantity:x.quantity,unit:x.unit,threshold:x.threshold,status:x.status})),
+      recent_sales:s.slice(0,20),overdue_reminders:r,low_stock:d.low_stock,weekly_sales:d.weekly_sales};
+  } catch(e) { return {error:"Could not load shop data"}; }
+}
+function addAiMessage(role, text) {
+  const c=document.getElementById("ai-messages");
+  const d=document.createElement("div"); d.className=`ai-msg ${role}`;
+  const av=document.createElement("div"); av.className="ai-msg-avatar"; av.textContent=role==="ai"?"🤖":"👤";
+  const b=document.createElement("div"); b.className="ai-msg-bubble";
+  b.innerHTML=text.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n- /g,"<br>• ").replace(/\n\d+\./g,m=>"<br>"+m.trim()).replace(/\n/g,"<br>");
+  d.appendChild(av); d.appendChild(b); c.appendChild(d); c.scrollTop=c.scrollHeight;
+  if(role==="ai"&&aiSpeakEnabled) speakAiResponse(text);
+}
+function showTyping() { const c=document.getElementById("ai-messages"); const d=document.createElement("div"); d.className="ai-msg ai"; d.id="ai-typing-indicator"; d.innerHTML=`<div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
+function hideTyping() { const t=document.getElementById("ai-typing-indicator"); if(t) t.remove(); }
 
-// Voice tooltip hover
-document.getElementById("voice-fab").addEventListener("mouseenter",()=>{if(!voiceListening) document.getElementById("voice-tooltip").classList.add("show");});
-document.getElementById("voice-fab").addEventListener("mouseleave",()=>{if(!voiceListening) document.getElementById("voice-tooltip").classList.remove("show");});
+async function sendAiMessage() {
+  if(aiLoading) return;
+  const inp=document.getElementById("ai-input"), message=inp.value.trim();
+  if(!message) return;
+  inp.value=""; inp.style.height="auto";
+  addAiMessage("user", message);
+  aiMessages.push({role:"user", content:message});
+  await runAi(message);
+}
 
-// Close modals on overlay click
+async function runAi(message) {
+  aiLoading=true; document.getElementById("ai-send-btn").disabled=true; showTyping();
+  try {
+    const ctx = await getShopContext();
+    const reply = await callGemini(message, ctx);
+    hideTyping(); addAiMessage("ai", reply);
+    aiMessages.push({role:"assistant", content:reply});
+  } catch(e) {
+    hideTyping(); addAiMessage("ai", "❌ Error: " + e.message);
+  }
+  aiLoading=false; document.getElementById("ai-send-btn").disabled=false;
+}
+
+const quickPrompts = {
+  summary:  "Aaj ka complete business summary do — sales, udhaar, collections, aur koi urgent cheez.",
+  overdue:  "Sabhi overdue customers ki list do. 10+ din wale ko urgent mark karo. Kya karna chahiye batao.",
+  restock:  "Inventory analyze karo. Kaun se products urgently restock karne hain? Quantity suggest karo.",
+  whatsapp: "Har pending customer ke liye WhatsApp reminder messages likho. Warm Hinglish mein, mere number aur shop name zaroor dalo.",
+  topdebt:  "Top 5 customers by outstanding balance — dikhao aur pehle kisko follow up karoon recommend karo."
+};
+async function aiQuick(type) {
+  if(!aiOpen) toggleAI();
+  await new Promise(r=>setTimeout(r,100));
+  const msg=quickPrompts[type]; addAiMessage("user",msg); aiMessages.push({role:"user",content:msg}); await runAi(msg);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+document.getElementById("btn-open-sale").addEventListener("click", openSaleModal);
+
+document.getElementById("voice-fab").addEventListener("mouseenter", ()=>{ if(!voiceListening) document.getElementById("voice-tooltip").classList.add("show"); });
+document.getElementById("voice-fab").addEventListener("mouseleave", ()=>{ if(!voiceListening) document.getElementById("voice-tooltip").classList.remove("show"); });
+
 document.querySelectorAll(".modal-overlay").forEach(overlay=>{
-  overlay.addEventListener("click",e=>{ if(e.target===overlay) overlay.classList.remove("open"); });
+  overlay.addEventListener("click", e=>{ if(e.target===overlay) overlay.classList.remove("open"); });
 });
 
-window.onload=()=>{
-  document.getElementById("loading").style.display="none";
-  const lb=document.getElementById("lang-"+currentLang.replace("-",""));
+window.onload = () => {
+  document.getElementById("loading").style.display = "none";
+  const lb = document.getElementById("lang-" + currentLang.replace("-",""));
   if(lb) lb.classList.add("active");
   else document.getElementById("lang-hi-en")?.classList.add("active");
-  TOKEN&&USER?initApp():(document.getElementById("auth-screen").style.display="flex");
+  TOKEN && USER ? initApp() : (document.getElementById("auth-screen").style.display = "flex");
 };
 </script>
 </body>
