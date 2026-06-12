@@ -48,36 +48,91 @@ def get_db():
         db.close()
 
 # ─── JWT ──────────────────────────────────────────────────────────────────────
+
 SECRET_KEY = os.getenv("SECRET_KEY", "khatakitab-super-secret-2025-vibhor")
-security   = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 def make_token(payload: dict) -> str:
-    header    = base64.urlsafe_b64encode(json.dumps({"alg":"HS256","typ":"JWT"}).encode()).decode().rstrip("=")
-    body      = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+    header = base64.urlsafe_b64encode(
+        json.dumps({"alg": "HS256", "typ": "JWT"}).encode()
+    ).decode().rstrip("=")
+
+    body = base64.urlsafe_b64encode(
+        json.dumps(payload).encode()
+    ).decode().rstrip("=")
+
     sig_input = f"{header}.{body}".encode()
-    sig       = hmac.new(SECRET_KEY.encode(), sig_input, hashlib.sha256).hexdigest()
+
+    sig = hmac.new(
+        SECRET_KEY.encode(),
+        sig_input,
+        hashlib.sha256
+    ).hexdigest()
+
     return f"{header}.{body}.{sig}"
+
 
 def verify_token(token: str) -> dict:
     try:
-        header, body, sig = token.split(".")
+        if not token:
+            raise ValueError("Missing token")
+
+        parts = token.split(".")
+        if len(parts) != 3:
+            raise ValueError("Malformed token")
+
+        header, body, sig = parts
+
         sig_input = f"{header}.{body}".encode()
-        expected  = hmac.new(SECRET_KEY.encode(), sig_input, hashlib.sha256).hexdigest()
-        if not hmac.compare_digest(sig, expected):
+
+        expected_sig = hmac.new(
+            SECRET_KEY.encode(),
+            sig_input,
+            hashlib.sha256
+        ).hexdigest()
+
+        if not hmac.compare_digest(sig, expected_sig):
+            print("JWT ERROR: Bad signature")
             raise ValueError("Bad signature")
-        padding = 4 - len(body) % 4
-        data = json.loads(base64.urlsafe_b64decode(body + "=" * padding))
-        if data.get("exp", 0) < datetime.utcnow().timestamp():
+
+        # Correct base64 padding
+        padding = (-len(body)) % 4
+
+        decoded = base64.urlsafe_b64decode(
+            body + ("=" * padding)
+        )
+
+        data = json.loads(decoded)
+
+        exp = data.get("exp")
+
+        if exp is None:
+            raise ValueError("Missing expiry")
+
+        if float(exp) < datetime.utcnow().timestamp():
+            print("JWT ERROR: Token expired")
             raise ValueError("Token expired")
+
         return data
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-def get_current_user(creds: HTTPAuthorizationCredentials = Depends(security)):
+    except Exception as e:
+        print(f"JWT ERROR: {str(e)}")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
+
+
+def get_current_user(
+    creds: HTTPAuthorizationCredentials = Depends(security)
+):
+    if creds is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Authorization header missing"
+        )
+
     return verify_token(creds.credentials)
-
-def hash_password(pw: str) -> str:
-    return hashlib.sha256(pw.encode()).hexdigest()
 
 # ─── MODELS ───────────────────────────────────────────────────────────────────
 class User(Base):
@@ -408,20 +463,29 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
 @app.post("/auth/login", tags=["Auth"])
 def login(data: LoginIn, db: Session = Depends(get_db)):
     user = db.query(User).filter(
-        User.email    == data.email,
+        User.email == data.email,
         User.password == hash_password(data.password)
     ).first()
+
     if not user:
-        raise HTTPException(401, "Invalid email or password")
-    exp   = (datetime.utcnow() + timedelta(days=7)).timestamp()
-    token = make_token({"sub": user.id, "email": user.email, "exp": exp})
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    token = make_token({
+        "sub": user.id,
+        "email": user.email,
+        "exp": (datetime.utcnow() + timedelta(days=30)).timestamp()
+    })
+
     return {
         "token": token,
         "user": {
-            "id":        user.id,
-            "name":      user.name,
+            "id": user.id,
+            "name": user.name,
             "shop_name": user.shop_name,
-            "phone":     user.phone or ""
+            "phone": user.phone or ""
         }
     }
 
